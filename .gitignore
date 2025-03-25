@@ -1,0 +1,12 @@
+.qudo
+
+.env
+.env.*
+.todo
+
+# Dependency directories
+node_modules/
+dist/
+dump/
+
+note*

@@ -1,0 +1,43 @@
+import dotenv from "dotenv";
+import bcrypt from "bcryptjs";
+import UserModel from "../app/user/user.model";
+import config from ".";
+
+dotenv.config();
+
+const seedSuperAdmin = async () => {
+  try {
+    const superAdminEmail = config.SUPER_ADMIN_EMAIL;
+    const superAdminPassword = config.SUPER_ADMIN_PASSWORD;
+
+    if (!superAdminEmail || !superAdminPassword) {
+      throw new Error("Super admin credentials are not defined in environment variables");
+    }
+
+    // Check if super admin already exists
+    const existingSuperAdmin = await UserModel.findOne({
+      email: superAdminEmail,
+      role: "superAdmin",
+    });
+
+    if (!existingSuperAdmin) {
+      // Hash password
+      const hashedPassword = await bcrypt.hash(superAdminPassword, config.sault_round);
+
+      // Create new super admin
+      await UserModel.create({
+        email: superAdminEmail,
+        password: hashedPassword,
+        name: "SuperAdmin",
+        role: "superAdmin",
+      });
+
+      console.log("Super admin created successfully");
+    }
+  } catch (error) {
+    console.error("Error seeding super admin:", error);
+    process.exit(1);
+  }
+};
+
+export default seedSuperAdmin;
