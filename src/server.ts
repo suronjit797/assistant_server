@@ -21,7 +21,6 @@ const bootFunctions = async () => {
 
     // connect mongodb
     await connectDB();
-    // await redis.connect();
 
     server = app.listen(config.PORT, () => successLogger(`App listening on port ${config.PORT}...`));
   } catch (error: any) {
