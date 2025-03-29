@@ -8,8 +8,12 @@ import morgan from "morgan";
 import router from "./app/routes";
 import globalError from "./global/globalError.js";
 import { metricsEndpointJsonMiddleware, prometheusMetricsMiddleware } from "./middleware/promMiddleware";
+import path from "path";
+import fs from "fs";
+import config from "./config";
 
 const app: Application = express();
+const buildPath = config.FRONTEND_BUILD_PATH;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -25,9 +29,18 @@ app.use(helmet());
 // app.use(csurf({ cookie: true }));
 // route
 
-app.get("/", async (req: Request, res: Response) => {
-  res.send("<h1> Welcome to bun Manager </h1>");
-});
+if (fs.existsSync(buildPath + "/index.html")) {
+  console.log("Found ----------------> ", buildPath);
+  app.use("/", express.static(path.resolve(buildPath)));
+  app.use("*", function (req, res) {
+    res.sendFile(path.resolve(buildPath, "index.html"));
+  });
+} else {
+  console.log("Not found ----------------> ", buildPath);
+
+  app.use("/", express.static("public"));
+}
+
 
 app.get("/metrics", metricsEndpointJsonMiddleware);
 

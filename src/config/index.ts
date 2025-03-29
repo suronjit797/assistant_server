@@ -22,4 +22,5 @@ export default {
   SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD || "admin123#",
   REDIS_PORT: Number(process.env.REDIS_PORT) || 6379,
   REDIS_HOST: process.env.REDIS_HOST || "localhost",
+  FRONTEND_BUILD_PATH: process.env.FRONTEND_BUILD_PATH || "../frontend/dist",
 };
