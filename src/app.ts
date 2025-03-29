@@ -43,6 +43,15 @@ app.use(prometheusMetricsMiddleware);
 // app.use(csurf({ cookie: true }));
 // route
 
+
+
+app.get("/metrics", metricsEndpointJsonMiddleware);
+
+// main api routes
+app.use("/api/v1", router);
+// handle not found route
+
+// frontend
 if (fs.existsSync(buildPath + "/index.html")) {
   console.log("Found ----------------> ", buildPath);
   app.use("/", express.static(path.resolve(buildPath)));
@@ -51,15 +60,8 @@ if (fs.existsSync(buildPath + "/index.html")) {
   });
 } else {
   console.log("Not found ----------------> ", buildPath);
-
   app.use("/", express.static("public"));
 }
-
-app.get("/metrics", metricsEndpointJsonMiddleware);
-
-// main api routes
-app.use("/api/v1", router);
-// handle not found route
 
 app.use((req: Request, res: Response) => {
   res.status(404).send({
