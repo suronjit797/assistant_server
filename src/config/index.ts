@@ -20,6 +20,7 @@ export default {
   // superadmin
   SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL || "admin@example.com",
   SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD || "admin123#",
+  SUPER_ADMIN_NAME: process.env.SUPER_ADMIN_NAME || "Super Admin",
   REDIS_PORT: Number(process.env.REDIS_PORT) || 6379,
   REDIS_HOST: process.env.REDIS_HOST || "localhost",
   FRONTEND_BUILD_PATH: process.env.FRONTEND_BUILD_PATH || "../frontend/dist",

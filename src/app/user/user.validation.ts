@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { userRole } from "../../shared/constant";
+import { globalImageValidator } from "../../global/globalValidator";
 
 export const userCreateZodSchema = z.object({
   body: z.object({
@@ -7,6 +8,13 @@ export const userCreateZodSchema = z.object({
     email: z.string(),
     role: z.enum(Object.values(userRole) as [string, ...string[]]).optional(),
     password: z.string(),
+    phone: z.string(),
+    loginId: z.string(),
+    isActive: z.boolean(),
+    avatar: globalImageValidator,
+    lastLogin: z.date(),
+    otp: z.number(),
+    otpExpiredAt: z.date(),
   }),
 });
 
@@ -24,5 +32,11 @@ export const userUpdateZodSchema = z.object({
     phone: z.string().optional(),
     role: z.enum(Object.values(userRole) as [string, ...string[]]).optional(),
     password: z.string().optional(),
+    loginId: z.string().optional(),
+    isActive: z.string().optional(),
+    avatar: globalImageValidator,
+    lastLogin: z.string().optional(),
+    otp: z.string().optional(),
+    otpExpiredAt: z.string().optional(),
   }),
 });

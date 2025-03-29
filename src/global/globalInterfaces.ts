@@ -53,5 +53,10 @@ export interface baseResponse {
   updatedAt: string;
 }
 
-
-
+export interface ImageInterface {
+  uid: string;
+  name: string;
+  status: string;
+  url: string;
+  size: number;
+}

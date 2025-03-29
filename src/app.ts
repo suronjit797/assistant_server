@@ -9,8 +9,8 @@ import morgan from "morgan";
 import path from "path";
 import router from "./app/routes";
 import config from "./config";
-import globalError from "./global/globalError.js";
 import { metricsEndpointJsonMiddleware, prometheusMetricsMiddleware } from "./middleware/promMiddleware";
+import globalError from "./global/globalError";
 
 const app: Application = express();
 const buildPath = config.FRONTEND_BUILD_PATH;

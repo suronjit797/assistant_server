@@ -8,6 +8,7 @@ dotenv.config();
 const seedSuperAdmin = async () => {
   try {
     const superAdminEmail = config.SUPER_ADMIN_EMAIL;
+    const superAdminName = config.SUPER_ADMIN_NAME;
     const superAdminPassword = config.SUPER_ADMIN_PASSWORD;
 
     if (!superAdminEmail || !superAdminPassword) {
@@ -28,7 +29,7 @@ const seedSuperAdmin = async () => {
       await UserModel.create({
         email: superAdminEmail,
         password: hashedPassword,
-        name: "SuperAdmin",
+        name: superAdminName,
         role: "superAdmin",
       });
 

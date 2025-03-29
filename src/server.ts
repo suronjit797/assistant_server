@@ -46,9 +46,9 @@ process.on("unhandledRejection", (error) => {
   }
 });
 
-process.on("SIGTERM", () => {
-  successLogger("SIGTERM is received");
-  if (server) {
-    server.close();
-  }
-});
+// process.on("SIGTERM", () => {
+//   successLogger("SIGTERM is received");
+//   if (server) {
+//     server.close();
+//   }
+// });
