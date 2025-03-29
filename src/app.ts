@@ -37,7 +37,7 @@ app.use(cookieParser());
 app.use(prometheusMetricsMiddleware);
 
 // can be more config for security
-app.use(helmet());
+// app.use(helmet());
 
 // CSRF Protection for cookies
 // app.use(csurf({ cookie: true }));
