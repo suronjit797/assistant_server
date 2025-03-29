@@ -3,21 +3,35 @@ import cors from "cors";
 // import csurf from "csurf";
 import type { Application, Request, Response } from "express";
 import express from "express";
+import fs from "fs";
 import helmet from "helmet";
 import morgan from "morgan";
+import path from "path";
 import router from "./app/routes";
+import config from "./config";
 import globalError from "./global/globalError.js";
 import { metricsEndpointJsonMiddleware, prometheusMetricsMiddleware } from "./middleware/promMiddleware";
-import path from "path";
-import fs from "fs";
-import config from "./config";
 
 const app: Application = express();
 const buildPath = config.FRONTEND_BUILD_PATH;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const allowedOrigins: any = ["http://localhost:3000", "http://199.250.210.184:5000", "http://localhost:5000"];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"), false);
+      }
+    },
+  }),
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
 app.use(morgan("tiny"));
 app.use(cookieParser());
 app.use(prometheusMetricsMiddleware);
@@ -40,7 +54,6 @@ if (fs.existsSync(buildPath + "/index.html")) {
 
   app.use("/", express.static("public"));
 }
-
 
 app.get("/metrics", metricsEndpointJsonMiddleware);
 
