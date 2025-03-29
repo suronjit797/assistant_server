@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "bun --watch run src/server.ts",
     "start": "NODE_ENV=production bun run dist/server.js",
+    "build": "NODE_ENV=production tsc",
     "build:prod": "NODE_ENV=production bun build ./src/server.ts --outdir ./dist --target bun --minify",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write ."

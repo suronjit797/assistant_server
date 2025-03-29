@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>CMS API</title>
+    <style>
+      .box {
+        width: 30%;
+      }
+      @media screen and (max-width: 668px) {
+        .box {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body
+    style="
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana,
+        sans-serif;
+    "
+  >
+    <main style="display: flex; align-items: center; justify-content: center; height: 100vh" id="init">
+      <div style="box-shadow: 0px 0px 10px #ddd; padding: 80px 50px; border-radius: 20px" id="box">
+        <h1 style="text-align: center">Welcome to CMS API</h1>
+        <h4 style="text-align: center">Setup Super Admin</h4>
+
+        <form action="/admin">
+          <div style="margin-bottom: 20px">
+            <label style="display: block; margin-bottom: 10px; font-size: 20px">Email</label>
+            <input
+              type="email"
+              style="padding: 10px; width: 100%; box-sizing: border-box; border-radius: 5px; border: 1px solid #ddd"
+              required
+              id="email"
+            />
+          </div>
+
+          <div style="margin-bottom: 20px">
+            <label style="display: block; margin-bottom: 10px; font-size: 20px">Password</label>
+            <input
+              type="password"
+              style="padding: 10px; width: 100%; box-sizing: border-box; border-radius: 5px; border: 1px solid #ddd"
+              required
+              id="password"
+            />
+          </div>
+
+          <div style="margin-bottom: 20px">
+            <label style="display: block; margin-bottom: 10px; font-size: 20px">Confirm Password</label>
+            <input
+              type="password"
+              style="padding: 10px; width: 100%; box-sizing: border-box; border-radius: 5px; border: 1px solid #ddd"
+              required
+              id="cpassword"
+            />
+          </div>
+
+          <button
+            style="
+              width: 100%;
+              background-color: crimson;
+              color: white;
+              border: 0px none;
+              padding: 15px 20px;
+              margin-top: 20px;
+              border-radius: 5px;
+              cursor: pointer;
+            "
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </main>
+
+    <script>
+      fetch("/user/setup", {
+        method: "get",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.isInit) {
+            window.location.href = "/";
+          } else {
+            alert(data.message);
+          }
+        });
+
+      function handleSubmit(e) {
+        e.preventDefault();
+
+        const email = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
+        const cpassword = document.querySelector("#cpassword").value;
+
+        fetch("/user/setup", {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, cpassword }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            alert(data.message);
+          });
+      }
+
+      document.querySelector("form").addEventListener("submit", handleSubmit);
+    </script>
+  </body>
+</html>
