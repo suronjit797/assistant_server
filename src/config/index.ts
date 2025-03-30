@@ -24,4 +24,9 @@ export default {
   REDIS_PORT: Number(process.env.REDIS_PORT) || 6379,
   REDIS_HOST: process.env.REDIS_HOST || "localhost",
   FRONTEND_BUILD_PATH: process.env.FRONTEND_BUILD_PATH || "../frontend/dist",
+  FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:3000",
+  EMAIL_HOST: process.env.EMAIL_HOST || "localhost",
+  EMAIL_USER: process.env.EMAIL_USER || "",
+  EMAIL_PASS: process.env.EMAIL_PASS || "",
+  CUSTOMER_CARE_EMAIL: process.env.CUSTOMER_CARE_EMAIL || "support@example.com",
 };

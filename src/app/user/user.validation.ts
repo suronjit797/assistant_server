@@ -40,3 +40,9 @@ export const userUpdateZodSchema = z.object({
     otpExpiredAt: z.string().optional(),
   }),
 });
+
+export const forgotPasswordZodSchema = z.object({
+  body: z.object({
+    email: z.string(),
+  }),
+});

@@ -3,7 +3,7 @@ import userController from "./user.controller";
 import { auth } from "../../middleware/auth";
 import { userRole } from "../../shared/constant";
 import { validatorMiddleware } from "../../middleware/zodValidator";
-import { userCreateZodSchema, userLoginZodSchema, userUpdateZodSchema } from "./user.validation";
+import { forgotPasswordZodSchema, userCreateZodSchema, userLoginZodSchema, userUpdateZodSchema } from "./user.validation";
 
 const userRouter = express.Router();
 const { admin } = userRole;
@@ -19,6 +19,8 @@ userRouter.post("/login", validatorMiddleware(userLoginZodSchema), userControlle
 userRouter.get("/profile", auth(), userController.getProfile);
 userRouter.put("/profile", auth(), validatorMiddleware(userUpdateZodSchema), userController.updateProfile);
 userRouter.delete("/profile", auth(), userController.removeProfile);
+userRouter.post("/forgot-password", validatorMiddleware(forgotPasswordZodSchema), userController.removeProfile);
+
 
 // user
 userRouter.get("/", auth(admin), partialFilterMiddlewares, userController.getAll);
