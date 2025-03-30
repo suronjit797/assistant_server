@@ -7,7 +7,7 @@ import { userRole } from "../shared/constant";
 import { ApiError } from "../global/globalError";
 import UserModel from "../app/user/user.model";
 
-const extractToken = (authorizationHeader: string | undefined): string | null => {
+export const extractToken = (authorizationHeader: string | undefined): string | null => {
   if (!authorizationHeader) return null;
   const [bearer, token] = authorizationHeader.split(" ");
   return bearer === config.Bearer && token ? token : null;

@@ -46,3 +46,9 @@ export const forgotPasswordZodSchema = z.object({
     email: z.string(),
   }),
 });
+export const resetPasswordZodSchema = z.object({
+  body: z.object({
+    token: z.string(),
+    password: z.string(),
+  }),
+});

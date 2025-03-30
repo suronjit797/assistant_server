@@ -96,35 +96,37 @@ const removeProfile: RequestHandler = async (req, res, next) => {
 export const forgotPassword: RequestHandler = async (req, res, next): Promise<void> => {
   try {
     // Validate request body
-    const { email } = req.body;
+    await userService.forgotPassword(req.body.email);
 
-    const user = await UserModel.findOne({ email });
+    const payload = {
+      success: true,
+      message: "Password reset link sent to your mail",
+    };
 
-    if (!user) {
-      throw new ApiError(httpStatus.BAD_REQUEST, "Invalid User");
-    }
-
-    const token = jwt.sign({ userId: user._id }, config.token.access_token_secret, {
-      expiresIn: config.token.access_token_time,
-    });
-
-    const link = `${config.FRONTEND_URL}/reset-password/${token}`;
-
-    const text = mailTemplate({
-      fileName: "forgotPassword",
-      name: user.name,
-      email,
-      link,
-    });
-
-
-    await sendEmail({ email, subject: "UBB Amanah Berhad Password Reset", text });
-
-    res.status(200).json({ message: "Password reset link sent to your email account" });
+    sendResponse(res, httpStatus.OK, payload);
+    return;
   } catch (error) {
     next(error);
   }
 };
 
-const userController = { ...globalControllers, getProfile, updateProfile, loginUser, removeProfile };
+export const resetPassword: RequestHandler = async (req, res, next): Promise<void> => {
+  try {
+    // Validate request body
+    const data = await userService.resetPassword(req.body);
+
+    const payload = {
+      success: true,
+      message: "Password reset successfully",
+      data,
+    };
+
+    sendResponse(res, httpStatus.OK, payload);
+    return;
+  } catch (error) {
+    next(error);
+  }
+};
+
+const userController = { ...globalControllers, getProfile, updateProfile, loginUser, removeProfile, forgotPassword, resetPassword };
 export default userController;

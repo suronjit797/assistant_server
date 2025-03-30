@@ -31,6 +31,7 @@ const seedSuperAdmin = async () => {
         password: hashedPassword,
         name: superAdminName,
         role: "superAdmin",
+        loginId: superAdminEmail,
       });
 
       console.log("Super admin created successfully");

@@ -1,6 +1,10 @@
 import config from "../../config";
 import globalService from "../../global/global.service";
 import { ApiError } from "../../global/globalError";
+import { CustomJwtPayload } from "../../global/globalInterfaces";
+import { extractToken } from "../../middleware/auth";
+import { mailTemplate } from "../../utils/makeEmailTemplate";
+import sendEmail from "../../utils/sendMail";
 import type { TUser } from "./user.interface";
 import UserModel from "./user.model";
 import bcrypt from "bcryptjs";
@@ -19,11 +23,12 @@ const globalServices = globalService(UserModel);
 // other services
 const login = async (payload: LoginPayload): Promise<LoginRes> => {
   // Find user by email
-  const user = await UserModel.findOne({ email: payload.email }).select("+password");
+  const user = await UserModel.findOne({ $or: [{ email: payload.email }, { loginId: payload.email }] }).select(
+    "+password",
+  );
   if (!user) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid credentials");
   }
-
 
   const isPasswordValid = await bcrypt.compare(payload.password, user.password as string);
   if (!isPasswordValid) {
@@ -67,6 +72,59 @@ const create = async (user: TUser): Promise<TUser | null> => {
   return newUser;
 };
 
-const userService = { ...globalServices, login, create };
+const forgotPassword = async (email: string): Promise<void> => {
+  try {
+    const user = await UserModel.findOne({ $or: [{ email: email }, { loginId: email }] });
+
+    if (!user) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "Invalid User");
+    }
+
+    const token = jwt.sign({ userId: user._id }, config.token.access_token_secret, {
+      expiresIn: config.token.access_token_time,
+    });
+
+    const link = `${config.FRONTEND_URL}/reset-password/${token}`;
+
+    const text = mailTemplate({
+      fileName: "forgotPassword",
+      name: user.name,
+      email,
+      link,
+    });
+
+    await sendEmail({ email, subject: "UBB Amanah Berhad Password Reset", text });
+    return;
+  } catch {
+    throw new Error("Reset Password Failed");
+  }
+};
+
+type resetPayload = { token: string; password: string };
+
+const resetPassword = async (payload: resetPayload): Promise<TUser | null> => {
+  console.log(payload)
+  try {
+    let token = extractToken(payload.token);
+console.log(token)
+    if (!token) throw new Error(`Invalid Request`);
+
+    const decoded = jwt.verify(token, config.token.access_token_secret) as CustomJwtPayload;
+    console.log(decoded)
+    const user = UserModel.findById(decoded?._id);
+    console.log(user)
+    if (!user) throw new Error(`Invalid Request`);
+
+    const salt = await bcrypt.genSalt(config.sault_round);
+    const hashedPassword = await bcrypt.hash(payload.password, salt);
+    const data = await UserModel.findByIdAndUpdate(user._id, { password: hashedPassword }, { new: true });
+
+    return data;
+  } catch {
+    throw new Error("Reset Password Failed");
+  }
+};
+
+const userService = { ...globalServices, login, create, forgotPassword, resetPassword };
 
 export default userService;
