@@ -24,4 +24,5 @@ const userSchema = new Schema<TUser>(
 
 const UserModel = model<TUser, TUserModel>("User", userSchema);
 
+
 export default UserModel;

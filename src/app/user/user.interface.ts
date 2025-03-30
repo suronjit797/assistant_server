@@ -6,13 +6,13 @@ export type TUser = {
   email: string;
   role: "superAdmin" | "admin" | "user";
   password?: string;
-  phone: string;
+  phone?: string;
   loginId: string;
-  isActive: boolean;
-  avatar: ImageInterface;
-  lastLogin: Date;
-  otp: number;
-  otpExpiredAt: Date;
+  isActive?: boolean;
+  avatar?: ImageInterface;
+  lastLogin?: Date;
+  otp?: number;
+  otpExpiredAt?: Date;
 };
 
 export type LoginPayload = {

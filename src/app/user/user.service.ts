@@ -66,6 +66,15 @@ const create = async (user: TUser): Promise<TUser | null> => {
   const hashedPassword = await bcrypt.hash(user.password, salt);
 
   const userData = { ...user, password: hashedPassword };
+  if (!userData.avatar?.url) {
+    userData.avatar = {
+      name: "default avatar",
+      url: `https://ui-avatars.com/api/?name=${userData.name}`,
+      size: 0,
+      status: "active",
+      uid: userData.email,
+    };
+  }
 
   const newUser = await UserModel.create(userData);
 
@@ -103,16 +112,16 @@ const forgotPassword = async (email: string): Promise<void> => {
 type resetPayload = { token: string; password: string };
 
 const resetPassword = async (payload: resetPayload): Promise<TUser | null> => {
-  console.log(payload)
+  console.log(payload);
   try {
     let token = extractToken(payload.token);
-console.log(token)
+    console.log(token);
     if (!token) throw new Error(`Invalid Request`);
 
     const decoded = jwt.verify(token, config.token.access_token_secret) as CustomJwtPayload;
-    console.log(decoded)
+    console.log(decoded);
     const user = UserModel.findById(decoded?._id);
-    console.log(user)
+    console.log(user);
     if (!user) throw new Error(`Invalid Request`);
 
     const salt = await bcrypt.genSalt(config.sault_round);

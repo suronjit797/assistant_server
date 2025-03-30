@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import UserModel from "../app/user/user.model";
 import config from ".";
+import userService from "../app/user/user.service";
 
 dotenv.config();
 
@@ -23,16 +24,24 @@ const seedSuperAdmin = async () => {
 
     if (!existingSuperAdmin) {
       // Hash password
-      const hashedPassword = await bcrypt.hash(superAdminPassword, config.sault_round);
 
-      // Create new super admin
-      await UserModel.create({
+      await userService.create({
         email: superAdminEmail,
-        password: hashedPassword,
+        password: superAdminPassword,
         name: superAdminName,
         role: "superAdmin",
         loginId: superAdminEmail,
       });
+      // const hashedPassword = await bcrypt.hash(superAdminPassword, config.sault_round);
+
+      // Create new super admin
+      // await UserModel.create({
+      //   email: superAdminEmail,
+      //   password: hashedPassword,
+      //   name: superAdminName,
+      //   role: "superAdmin",
+      //   loginId: superAdminEmail,
+      // });
 
       console.log("Super admin created successfully");
     }
