@@ -17,7 +17,7 @@ const uploadCsvFile: RequestHandler = async (req, res, next) => {
       throw new ApiError(httpStatus.BAD_REQUEST, "No file uploaded");
     }
 
-    const data = await paymentService.uploadCsvFile(file);
+    const data = await paymentService.uploadCsvFile(file, req.user);
     const payload = {
       success: true,
       message: "upload success",

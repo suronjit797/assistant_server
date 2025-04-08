@@ -32,7 +32,6 @@ const globalController = <T>(
         // invalid cache
         const cacheKey = `api:v1:${name}*`.toLocaleLowerCase();
         const key = await redis.keys(cacheKey);
-        console.log(key, cacheKey);
         if (key?.length > 0) {
           redis.del(key);
         }
@@ -52,11 +51,13 @@ const globalController = <T>(
     },
 
     getAll: async (req, res, next) => {
+  
       try {
         let values: { data: Array<T>; meta: IMeta } = { data: [], meta: { limit: 10, page: 1, total: 0 } };
         // cached data
         const cacheKey = generateCacheKey(req);
         const cachedData = await redis.get(cacheKey);
+        console.log({ cacheKey });
 
         if (cachedData) {
           const cachedDataJSON = JSON.parse(cachedData);

@@ -4,12 +4,14 @@ import XLSX from "xlsx";
 import globalService from "../../global/global.service";
 import PaymentModel from "./payment.model";
 import PaymentHistoryModel from "../paymentHistory/paymentHistory.model";
+import { JwtPayload } from "jsonwebtoken";
+import { CustomJwtPayload } from "../../global/globalInterfaces";
 
 const globalServices = globalService(PaymentModel);
 
 // ! cvs is pending
 
-const uploadCsvFile = async (file: Express.Multer.File) => {
+const uploadCsvFile = async (file: Express.Multer.File, user: JwtPayload | CustomJwtPayload) => {
   const ext = file.originalname.split(".").pop()?.toLowerCase() || file.mimetype?.split("/")?.pop()?.toLowerCase();
 
   let results: any[] = [];
@@ -76,7 +78,7 @@ const uploadCsvFile = async (file: Express.Multer.File) => {
 
   const insert = await PaymentModel.insertMany(formatted);
   const ids = insert.map((p) => p._id);
-  const history = await PaymentHistoryModel.insertOne({ payments: ids });
+  const history = await PaymentHistoryModel.insertOne({ payments: ids, suer: user._id, type: "manual" });
 
   return insert;
 };

@@ -2,12 +2,14 @@ import express from "express";
 import userRouter from "./user/user.routes";
 import { uploadCloudinary } from "../utils/uploadToCloudinary";
 import paymentRouter from "./payments/payment.routes";
+import paymentHistoryRouter from "./paymentHistory/paymentHistory.routes";
 
 const router = express.Router();
 
 const moduleRoute = [
   { path: "/users", routes: userRouter },
   { path: "/payments", routes: paymentRouter },
+  { path: "/payments-history", routes: paymentHistoryRouter },
 ];
 
 moduleRoute.forEach((route) => router.use(route.path, route.routes));
