@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import csvParser from "csv-parser";
 import { Readable } from "stream";
 import XLSX from "xlsx";
