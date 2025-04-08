@@ -2,7 +2,7 @@ import { Model } from "mongoose";
 import type { IGetAll_service, IPagination, TFilter } from "./globalInterfaces";
 
 const globalService = <TType>(
-  ModelName: Model<TType, Record<string, unknown>>,
+  ModelName: Model<TType>,
 ): {
   create: (body: TType) => Promise<TType>;
   getSingle: (id: string) => Promise<TType | null>;
