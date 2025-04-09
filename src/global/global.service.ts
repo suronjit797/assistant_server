@@ -18,8 +18,12 @@ const globalService = <TType>(
 
     // get all
     getAll: async (pagination: IPagination, filter: Partial<TFilter>): Promise<IGetAll_service<TType[]>> => {
-      const { page, limit, skip, sortCondition } = pagination;
-      const data = await ModelName.find(filter).limit(limit).skip(skip).sort(sortCondition);
+      const { page, limit, skip, sortCondition, populate } = pagination;
+      const data = await ModelName.find(filter)
+        .limit(limit)
+        .skip(skip)
+        .sort(sortCondition)
+        .populate(populate || "");
       const total = await ModelName.countDocuments(filter);
       return { data, meta: { page, limit, total } };
     },

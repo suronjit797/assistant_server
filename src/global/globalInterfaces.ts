@@ -24,6 +24,7 @@ export type IPagination = {
   limit: number;
   skip: number;
   sortCondition: ISortCondition;
+  populate?: string;
 };
 
 export type IPartialSearchableFields = string[];

@@ -3,16 +3,18 @@ import { IPagination, ISortCondition } from "../global/globalInterfaces";
 import pic from "./picHelper";
 
 export const paginationHelper = (obj: Record<string, unknown>): IPagination => {
-  const { page = 1, limit = 10, sortBy = "createdAt", sortOrder = "desc" } = pic(obj, [
-    "page",
-    "limit",
-    "sortBy",
-    "sortOrder",
-  ]) as {
+  const {
+    page = 1,
+    limit = 10,
+    sortBy = "createdAt",
+    sortOrder = "desc",
+    populate = "",
+  } = pic(obj, ["page", "limit", "sortBy", "sortOrder", "populate"]) as {
     page?: number;
     limit?: number;
     sortBy?: string;
     sortOrder?: SortOrder;
+    populate?: string;
   };
 
   const parsedPage = Math.abs(Number(page)) || 1;
@@ -29,5 +31,6 @@ export const paginationHelper = (obj: Record<string, unknown>): IPagination => {
     limit: parsedLimit,
     skip,
     sortCondition,
+    populate,
   };
 };
