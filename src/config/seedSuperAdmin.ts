@@ -43,7 +43,7 @@ const seedSuperAdmin = async () => {
       //   loginId: superAdminEmail,
       // });
 
-      console.log("Super admin created successfully");
+      console.log("Super admin created successfully", superAdminPassword);
     }
   } catch (error) {
     console.error("Error seeding super admin:", error);
