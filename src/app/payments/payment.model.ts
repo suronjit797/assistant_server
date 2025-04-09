@@ -6,7 +6,7 @@ const PaymentSchema: Schema = new Schema<IPayment>(
     product: { type: String },
     donorName: { type: String },
     dateOfTrustDeed: { type: String },
-    trustDeedExpiryDate: { type: String },
+    trustDeedExpiryDate: { type: Date },
     tenure: { type: Number },
     dividendFrequency: { type: String },
     trustDeedNo: { type: String },

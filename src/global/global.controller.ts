@@ -51,7 +51,6 @@ const globalController = <T>(
     },
 
     getAll: async (req, res, next) => {
-  
       try {
         let values: { data: Array<T>; meta: IMeta } = { data: [], meta: { limit: 10, page: 1, total: 0 } };
         // cached data
@@ -71,8 +70,7 @@ const globalController = <T>(
           values = await service.getAll(pagination, filter);
 
           if (values?.data?.length) {
-            // can be used setex for auto expire
-            redis.set(cacheKey, JSON.stringify(values));
+            redis.set(cacheKey, JSON.stringify(values), "EX", 600);
           }
         }
         const { meta, data } = values;

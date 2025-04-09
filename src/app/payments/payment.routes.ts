@@ -9,14 +9,25 @@ import multer from "multer";
 const paymentRouter = express.Router();
 const { admin } = userRole;
 
+
+//! need change into income
 const partialFilterMiddlewares: RequestHandler = (req, res, next) => {
-  req.partialFilter = ["name", "email", "role"];
+  req.partialFilter = [
+    "product",
+    "donorName",
+    "trustDeedNo",
+    "reference",
+    "accountName",
+    "bank",
+    "name",
+    "emailAddress",
+  ];
   next();
 };
 
 // payment
-// paymentRouter.get("/", auth(admin), partialFilterMiddlewares, paymentController.getAll);
-// paymentRouter.get("/:id", auth(admin), paymentController.getSingle);
+paymentRouter.get("/", auth(admin), partialFilterMiddlewares, paymentController.getAll);
+paymentRouter.get("/:id", auth(admin), paymentController.getSingle);
 // paymentRouter.put("/:id", auth(admin), validatorMiddleware(paymentUpdateZodSchema), paymentController.update);
 // paymentRouter.delete("/:id", auth(admin), paymentController.remove);
 

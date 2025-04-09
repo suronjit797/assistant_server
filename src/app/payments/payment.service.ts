@@ -80,7 +80,7 @@ const uploadCsvFile = async (file: Express.Multer.File, user: JwtPayload | Custo
 
   const insert = await PaymentModel.insertMany(formatted);
   const ids = insert.map((p) => p._id);
-  const history = await PaymentHistoryModel.insertOne({ payments: ids, suer: user._id, type: "manual" });
+  const history = await PaymentHistoryModel.insertOne({ payments: ids, user: user._id, type: "manual" });
 
   return insert;
 };
