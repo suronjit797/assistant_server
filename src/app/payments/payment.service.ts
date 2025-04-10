@@ -1,15 +1,21 @@
 // @ts-nocheck
 
 import csvParser from "csv-parser";
+import { JwtPayload } from "jsonwebtoken";
 import { Readable } from "stream";
 import XLSX from "xlsx";
 import globalService from "../../global/global.service";
-import PaymentModel from "./payment.model";
-import PaymentHistoryModel from "../paymentHistory/paymentHistory.model";
-import { JwtPayload } from "jsonwebtoken";
 import { CustomJwtPayload } from "../../global/globalInterfaces";
+import PaymentHistoryModel from "../paymentHistory/paymentHistory.model";
+import PaymentModel from "./payment.model";
 
 const globalServices = globalService(PaymentModel);
+
+export function excelSerialToDate(serial: number): Date {
+  const utc_days = serial - 25569;
+  const utc_value = utc_days * 86400; // seconds
+  return new Date(utc_value * 1000); // milliseconds
+}
 
 // ! cvs is pending
 
@@ -42,18 +48,23 @@ const uploadCsvFile = async (file: Express.Multer.File, user: JwtPayload | Custo
   const formatted: any[] = [];
 
   results.forEach((data) => {
+    const trustAmount = Number(data[" Trust Amount (RM) "]) || 0;
+    const interestDividendPayableToClient = data[" Interest/ Dividend payable to client (%) "] || 0;
+
+    const income = (trustAmount * interestDividendPayableToClient) / 100;
+
     const fields = {
       product: data["Product "],
       donorName: data["Donor Name"],
-      dateOfTrustDeed: data["Date of Trust Deed"],
-      trustDeedExpiryDate: data["Trust Deed Expiry Date"],
+      dateOfTrustDeed: excelSerialToDate(data["Date of Trust Deed"]),
+      trustDeedExpiryDate: excelSerialToDate(data["Trust Deed Expiry Date"]),
       tenure: data["Tenure (Year)"],
       dividendFrequency: data["Dividend Frequency"],
       trustDeedNo: data["Trust Deed No."],
       reference: data["Reference"],
-      trustAmount: data[" Trust Amount (RM) "],
-      interestDividendPayableToClient: data[" Interest/ Dividend payable to client (%) "],
-      incomeForFeb2025: data["Income for \nFeb 2025"],
+      trustAmount,
+      interestDividendPayableToClient,
+      income,
       payment: data["PAYMENT"],
       accountNumber: data["AccountNumber"],
       accountName: data["Account Name"],
@@ -67,7 +78,6 @@ const uploadCsvFile = async (file: Express.Multer.File, user: JwtPayload | Custo
       mobileNo: data["Mobile No."],
       emailAddress: data["EmailAddress"],
     };
-
     // Only keep fields with valid values
     const removeNullValue = Object.fromEntries(
       Object.entries(fields).filter(([, value]) => value !== undefined && value !== null && value !== ""),

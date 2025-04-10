@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
-import bcrypt from "bcryptjs";
-import UserModel from "../app/user/user.model";
 import config from ".";
+import UserModel from "../app/user/user.model";
 import userService from "../app/user/user.service";
 
 dotenv.config();
