@@ -1,32 +1,27 @@
-import type { RequestHandler } from "express";
+import { RequestHandler } from "express";
 import httpStatus from "http-status";
+import { Model } from "mongoose";
 import redis from "../config/redis";
 import generateCacheKey from "../helper/cacheKeyGenerator";
 import filterHelper from "../helper/filterHelper";
 import { paginationHelper } from "../helper/paginitionHelper";
 import sendResponse from "../shared/sendResponse";
 import { ApiError } from "./globalError";
-import { IMeta, IPagination, TFilter } from "./globalInterfaces";
+import type { IMeta } from "./globalInterfaces";
 
-interface ServiceMethods<T> {
-  create: (data: T) => Promise<T | null>;
-  getSingle: (id: string) => Promise<T | null>;
-  getAll: (pagination: IPagination, filter: Partial<TFilter>) => Promise<{ data: T[]; meta: IMeta }>;
-  update: (id: string, data: Partial<T>) => Promise<T | null>;
-  remove: (id: string) => Promise<T | null>;
-}
-
-const globalController = <T>(
-  service: ServiceMethods<T>,
+const globalController = <TType>(
+  // ModelName: Model<TType>,
+  ModelName: Model<TType>,
   name: string,
 ): {
   create: RequestHandler;
-  getAll: RequestHandler;
   getSingle: RequestHandler;
   update: RequestHandler;
   remove: RequestHandler;
+  getAll: RequestHandler;
 } => {
   return {
+    // create
     create: async (req, res, next) => {
       try {
         // invalid cache
@@ -36,7 +31,7 @@ const globalController = <T>(
           redis.del(key);
         }
 
-        const data = await service.create(req.body);
+        const data = await ModelName.create(req.body);
 
         const payload = {
           success: true,
@@ -50,9 +45,10 @@ const globalController = <T>(
       }
     },
 
+    // get all
     getAll: async (req, res, next) => {
       try {
-        let values: { data: Array<T>; meta: IMeta } = { data: [], meta: { limit: 10, page: 1, total: 0 } };
+        let values: { data: Array<TType>; meta: IMeta } = { data: [], meta: { limit: 10, page: 1, total: 0 } };
         // cached data
         const cacheKey = generateCacheKey(req);
         const cachedData = await redis.get(cacheKey);
@@ -64,10 +60,19 @@ const globalController = <T>(
         } else {
           // filter
           const pagination = paginationHelper(req.query);
-          const filter = filterHelper(req.query, req.partialFilter);
+
+          const filter = filterHelper(req.query, req.partialFilter, new ModelName());
+          console.log(filter, req.query);
 
           // get data from service
-          values = await service.getAll(pagination, filter);
+          const { page, limit, skip, sortCondition, populate } = pagination;
+          const data = await ModelName.find(filter)
+            .limit(limit)
+            .skip(skip)
+            .sort(sortCondition)
+            .populate(populate || "");
+          const total = await ModelName.countDocuments(filter);
+          values = { data, meta: { page, limit, total } };
 
           if (values?.data?.length) {
             redis.set(cacheKey, JSON.stringify(values), "EX", 600);
@@ -89,9 +94,10 @@ const globalController = <T>(
       }
     },
 
+    // get single
     getSingle: async (req, res, next) => {
       try {
-        let data: T | null = null;
+        let data: TType | null = null;
         // cached data
         const cacheKey = generateCacheKey(req);
         const cachedData = await redis.get(cacheKey);
@@ -99,7 +105,7 @@ const globalController = <T>(
         if (cachedData) {
           data = JSON.parse(cachedData);
         } else {
-          data = await service.getSingle(req.params.id);
+          data = await await ModelName.findById(req.params.id);
           if (data) {
             redis.set(cacheKey, JSON.stringify(data));
           }
@@ -118,17 +124,17 @@ const globalController = <T>(
       }
     },
 
+    // update single
     update: async (req, res, next) => {
       try {
         // invalid cache
         const cacheKey = `api:v1:${name}*`.toLocaleLowerCase();
         const key = await redis.keys(cacheKey);
-        console.log(key, cacheKey);
         if (key?.length > 0) {
           redis.del(key);
         }
 
-        const data = await service.update(req.params.id, req.body);
+        const data = await ModelName.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
 
         if (!data) {
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Server Error");
@@ -146,6 +152,7 @@ const globalController = <T>(
       }
     },
 
+    // remove single
     remove: async (req, res, next) => {
       try {
         // invalid cache
@@ -156,7 +163,7 @@ const globalController = <T>(
           redis.del(key);
         }
 
-        const data = await service.remove(req.params.id);
+        const data = await ModelName.findByIdAndDelete(req.params.id);
 
         const payload = {
           success: true,

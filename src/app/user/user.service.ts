@@ -1,5 +1,5 @@
 import config from "../../config";
-import globalService from "../../global/global.service";
+import globalController from "../../global/global.controller";
 import { ApiError } from "../../global/globalError";
 import { CustomJwtPayload } from "../../global/globalInterfaces";
 import { extractToken } from "../../middleware/auth";
@@ -17,8 +17,6 @@ type LoginPayload = {
 };
 
 type LoginRes = { accessToken: string; refreshToken: string };
-
-const globalServices = globalService(UserModel);
 
 // other services
 const login = async (payload: LoginPayload): Promise<LoginRes> => {
@@ -134,6 +132,6 @@ const resetPassword = async (payload: resetPayload): Promise<TUser | null> => {
   }
 };
 
-const userService = { ...globalServices, login, create, forgotPassword, resetPassword };
+const userService = { login, create, forgotPassword, resetPassword };
 
 export default userService;

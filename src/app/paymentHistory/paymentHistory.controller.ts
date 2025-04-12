@@ -1,10 +1,10 @@
+import PaymentHistoryModel from "./paymentHistory.model";
 import globalController from "../../global/global.controller";
-import paymentHistoryService from "./paymentHistory.service";
 
 // variables
 const name = "Payment History";
 // global
-const globalControllers = globalController(paymentHistoryService, name);
+const controller = globalController(PaymentHistoryModel, name);
 
-const paymentController = { ...globalControllers };
+const paymentController = { ...controller };
 export default paymentController;

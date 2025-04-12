@@ -1,5 +1,6 @@
 import { IPartialSearchableFields, TFilter } from "../global/globalInterfaces";
 import pic from "./picHelper";
+import { Document } from "mongoose";
 
 // Supported operators for query
 const operatorsMap: Record<string, string> = {
@@ -15,8 +16,10 @@ const operatorsMap: Record<string, string> = {
 const filterHelper = <T extends Record<string, unknown>>(
   reqQuery: T,
   partialSearching: IPartialSearchableFields,
-): TFilter => {
-  const { search, ...rest } = pic(reqQuery, ["search"]);
+  schemaName: Document,
+): Partial<TFilter> => {
+  const schemaKeys = Object.keys(schemaName.schema.obj);
+  const { search, ...rest } = pic(reqQuery, ["search", ...schemaKeys]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const conditions: Record<string, any>[] = [];

@@ -1,14 +1,15 @@
 import { RequestHandler } from "express";
 import httpStatus from "http-status";
-import globalController from "../../global/global.controller";
 import { ApiError } from "../../global/globalError";
 import sendResponse from "../../shared/sendResponse";
 import paymentService from "./payment.service";
+import PaymentModel from "./payment.model";
+import globalController from "../../global/global.controller";
 
 // variables
 const name = "Payment";
 // global
-const globalControllers = globalController(paymentService, name);
+const globalControllers = globalController(PaymentModel, name);
 
 const uploadCsvFile: RequestHandler = async (req, res, next) => {
   try {

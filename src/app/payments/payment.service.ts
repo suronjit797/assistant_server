@@ -4,12 +4,10 @@ import csvParser from "csv-parser";
 import { JwtPayload } from "jsonwebtoken";
 import { Readable } from "stream";
 import XLSX from "xlsx";
-import globalService from "../../global/global.service";
+import globalController from "../../global/global.controller";
 import { CustomJwtPayload } from "../../global/globalInterfaces";
 import PaymentHistoryModel from "../paymentHistory/paymentHistory.model";
 import PaymentModel from "./payment.model";
-
-const globalServices = globalService(PaymentModel);
 
 export function excelSerialToDate(serial: number): Date {
   const utc_days = serial - 25569;
@@ -95,6 +93,6 @@ const uploadCsvFile = async (file: Express.Multer.File, user: JwtPayload | Custo
   return insert;
 };
 
-const paymentService = { ...globalServices, uploadCsvFile };
+const paymentService = { uploadCsvFile };
 
 export default paymentService;

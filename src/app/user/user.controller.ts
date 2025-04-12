@@ -3,17 +3,13 @@ import httpStatus from "http-status";
 import globalController from "../../global/global.controller";
 import { ApiError } from "../../global/globalError";
 import sendResponse from "../../shared/sendResponse";
-import userService from "./user.service";
 import UserModel from "./user.model";
-import jwt from "jsonwebtoken";
-import config from "../../config";
-import sendEmail from "../../utils/sendMail";
-import { mailTemplate } from "../../utils/makeEmailTemplate";
+import userService from "./user.service";
 
 // variables
 const name = "User";
 // global
-const globalControllers = globalController(userService, name);
+const globalControllers = globalController(UserModel, name);
 
 // login and register
 export const loginUser: RequestHandler = async (req, res, next) => {
@@ -48,7 +44,7 @@ export const loginUser: RequestHandler = async (req, res, next) => {
 
 const getProfile: RequestHandler = async (req, res, next) => {
   try {
-    const data = await userService.getSingle(req.user._id);
+    const data = await UserModel.findById(req.user._id);
     const payload = {
       success: true,
       message: "Profile fetched successfully",
@@ -63,7 +59,7 @@ const getProfile: RequestHandler = async (req, res, next) => {
 
 const updateProfile: RequestHandler = async (req, res, next) => {
   try {
-    const data = await userService.update(req.user._id, req.body);
+    const data = await UserModel.findByIdAndUpdate(req.user._id, req.body);
     const payload = {
       success: true,
       message: "Profile updated successfully",
@@ -78,7 +74,7 @@ const updateProfile: RequestHandler = async (req, res, next) => {
 
 const removeProfile: RequestHandler = async (req, res, next) => {
   try {
-    const data = await userService.remove(req.user._id);
+    const data = await UserModel.findByIdAndDelete(req.user._id);
     const payload = {
       success: true,
       message: "Profile deleted successfully",
@@ -128,5 +124,13 @@ export const resetPassword: RequestHandler = async (req, res, next): Promise<voi
   }
 };
 
-const userController = { ...globalControllers, getProfile, updateProfile, loginUser, removeProfile, forgotPassword, resetPassword };
+const userController = {
+  ...globalControllers,
+  getProfile,
+  updateProfile,
+  loginUser,
+  removeProfile,
+  forgotPassword,
+  resetPassword,
+};
 export default userController;
