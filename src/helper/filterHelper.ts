@@ -44,7 +44,12 @@ const filterHelper = <T extends Record<string, unknown>>(
       conditions.push({ [fieldName]: { [operator]: operatorValue } });
     } else if (Object.keys(rest).includes(key)) {
       // Exact match condition
-      conditions.push({ [key]: value });
+
+      if (typeof value === "string" && value.includes(",")) {
+        conditions.push({ [key]: { $in: value.split(",") } });
+      } else {
+        conditions.push({ [key]: value });
+      }
     }
   });
 

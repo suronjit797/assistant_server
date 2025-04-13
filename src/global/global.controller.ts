@@ -52,7 +52,7 @@ const globalController = <TType>(
         // cached data
         const cacheKey = generateCacheKey(req);
         const cachedData = await redis.get(cacheKey);
-        console.log({ cacheKey });
+        // console.log({ cacheKey });
 
         if (cachedData) {
           const cachedDataJSON = JSON.parse(cachedData);
@@ -62,7 +62,6 @@ const globalController = <TType>(
           const pagination = paginationHelper(req.query);
 
           const filter = filterHelper(req.query, req.partialFilter, new ModelName());
-          console.log(filter, req.query);
 
           // get data from service
           const { page, limit, skip, sortCondition, populate } = pagination;
@@ -158,7 +157,7 @@ const globalController = <TType>(
         // invalid cache
         const cacheKey = `api:v1:${name}*`.toLocaleLowerCase();
         const key = await redis.keys(cacheKey);
-        console.log(key, cacheKey);
+        // console.log(key, cacheKey);
         if (key?.length > 0) {
           redis.del(key);
         }
