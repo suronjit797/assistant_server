@@ -1,17 +1,13 @@
-# Use the official Bun image
-FROM oven/bun:latest
+FROM node:20-alpine
 
-# Set the working directory
 WORKDIR /app
 
-# Copy package.json and bun.lock
-COPY package.json bun.lock ./
+COPY package.json yarn.lock ./
+RUN yarn install
 
-# Install dependencies
-RUN bun install
+COPY . .
 
-# Expose the application port
 EXPOSE 5000
 
-# Start the development server
-CMD ["bun", "run", "dev"]
+# Run dev server (using ts-node-dev)
+CMD ["yarn", "dev"]

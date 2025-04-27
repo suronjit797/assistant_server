@@ -9,14 +9,23 @@ import { CustomJwtPayload } from "../../global/globalInterfaces";
 import PaymentHistoryModel from "../paymentHistory/paymentHistory.model";
 import PaymentModel from "./payment.model";
 
-export function excelSerialToDate(serial: number): Date {
-  const utc_days = serial - 25569;
-  const utc_value = utc_days * 86400; // seconds
-  return new Date(utc_value * 1000); // milliseconds
+export function excelSerialToDate(serial: number): Date | undefined {
+  console.log(serial);
+  if (typeof serial !== "number" || isNaN(serial)) return undefined;
+
+  const utcDays = serial - 25569;
+  const utcSeconds = utcDays * 86400;
+  const date = new Date(utcSeconds * 1000);
+
+  // Check if date is valid
+  if (isNaN(date.getTime())) {
+    return undefined;
+  }
+
+  return date;
 }
 
 // ! cvs is pending
-
 const uploadCsvFile = async (file: Express.Multer.File, user: JwtPayload | CustomJwtPayload) => {
   const ext = file.originalname.split(".").pop()?.toLowerCase() || file.mimetype?.split("/")?.pop()?.toLowerCase();
 
