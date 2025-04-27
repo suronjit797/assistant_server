@@ -12,6 +12,5 @@ redis.on("connect", async () => {
   await redis.config("SET", "maxmemory-policy", "allkeys-lfu");
 });
 redis.on("error", (err) => console.error("❌ Redis error:", err));
-redis.on("error", (err) => "");
 
 export default redis;
