@@ -9,16 +9,21 @@ import sendResponse from "../shared/sendResponse";
 import { ApiError } from "./globalError";
 import type { IMeta } from "./globalInterfaces";
 
+import { Types } from "mongoose";
+
+const { ObjectId } = Types;
+
 const globalController = <TType>(
   // ModelName: Model<TType>,
   ModelName: Model<TType>,
   name: string,
 ): {
   create: RequestHandler;
+  getAll: RequestHandler;
   getSingle: RequestHandler;
   update: RequestHandler;
   remove: RequestHandler;
-  getAll: RequestHandler;
+  removeMany: RequestHandler;
 } => {
   return {
     // create
@@ -167,6 +172,32 @@ const globalController = <TType>(
         const payload = {
           success: true,
           message: `${name} deleted successfully`,
+          data,
+        };
+        sendResponse(res, httpStatus.OK, payload);
+        return;
+      } catch (error) {
+        next(error);
+      }
+    },
+
+    // remove all
+    removeMany: async (req, res, next) => {
+      try {
+        // invalid cache
+        const cacheKey = `api:v1:${name}*`.toLocaleLowerCase();
+        const key = await redis.keys(cacheKey);
+
+        if (key?.length > 0) redis.del(key);
+
+        const ids = req.body.ids;
+        if (!ids || !ids.length) throw new ApiError(httpStatus.BAD_REQUEST, "No ids provided");
+        const filter = { _id: { $in: ids.map((id: string) => new ObjectId(id)) } };
+        const data = await ModelName.deleteMany(filter);
+
+        const payload = {
+          success: true,
+          message: `${name}s deleted successfully`,
           data,
         };
         sendResponse(res, httpStatus.OK, payload);

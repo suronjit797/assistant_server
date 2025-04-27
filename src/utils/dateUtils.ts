@@ -1,5 +1,4 @@
 export function excelSerialToDate(serial: number): Date | undefined {
-  console.log(serial);
   if (typeof serial !== "number" || isNaN(serial)) return undefined;
 
   const utcDays = serial - 25569;
