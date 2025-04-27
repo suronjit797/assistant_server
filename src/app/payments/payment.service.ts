@@ -7,6 +7,7 @@ import { CustomJwtPayload } from "../../global/globalInterfaces";
 import { excelSerialToDate } from "../../utils/dateUtils";
 import PaymentHistoryModel from "../paymentHistory/paymentHistory.model";
 import PaymentModel from "./payment.model";
+import redis from "../../config/redis";
 
 // ! cvs is pending
 const uploadCsvFile = async (file: Express.Multer.File, user: JwtPayload | CustomJwtPayload) => {
@@ -77,6 +78,13 @@ const uploadCsvFile = async (file: Express.Multer.File, user: JwtPayload | Custo
       return formatted.push(removeNullValue);
     }
   });
+
+  // invalid payment cache
+  const paymentKey = await redis.keys(`api:v1:Payment*`.toLocaleLowerCase());
+  if (paymentKey?.length > 0) redis.del(paymentKey);
+  // invalid payment history cache
+  const paymentHistoryKey = await redis.keys(`api:v1:Payment History*`.toLocaleLowerCase());
+  if (paymentHistoryKey?.length > 0) redis.del(paymentHistoryKey);
 
   const insert = await PaymentModel.insertMany(formatted);
   const ids = insert.map((p) => p._id);
