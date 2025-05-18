@@ -11,6 +11,8 @@ export interface IPayment extends Document {
   reference: string;
   trustAmount: number | null;
   interestDividendPayableToClient: number | null;
+  status: "pending" | "initializing" | "completed";
+  type: "auto" | "manual";
   income: number | null;
   payment: string;
   accountNumber: string;
@@ -27,5 +29,5 @@ export interface IPayment extends Document {
 }
 
 export interface IPaymentHistory extends Document {
-  payments:ObjectId[]
+  payments: ObjectId[];
 }

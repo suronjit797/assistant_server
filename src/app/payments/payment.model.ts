@@ -26,6 +26,8 @@ const PaymentSchema: Schema = new Schema<IPayment>(
     nricPassportNo: { type: String },
     mobileNo: { type: String },
     emailAddress: { type: String },
+    status: { type: String, enum: ["pending", "initializing", "completed"], default: "pending" },
+    type: { type: String, enum: ["auto", "manual"], default: "manual" },
   },
   { timestamps: true },
 );

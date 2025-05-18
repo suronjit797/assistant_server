@@ -29,4 +29,9 @@ export default {
   EMAIL_USER: process.env.EMAIL_USER || "",
   EMAIL_PASS: process.env.EMAIL_PASS || "",
   CUSTOMER_CARE_EMAIL: process.env.CUSTOMER_CARE_EMAIL || "support@example.com",
+
+  // bukku
+  BUKKU_API_URL: process.env.BUKKU_API_URL || "https://api.bukku.com/v1",
+  BUKKU_SUBDOMAIN: process.env.BUKKU_SUBDOMAIN || "",
+  BUKKU_TOKEN: process.env.BUKKU_TOKEN || "",
 };
