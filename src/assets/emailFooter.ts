@@ -5,7 +5,7 @@ export const bottomFooter = `
                         <tr>
                             <td>
                                 <h3 style="font-size:15px;font-family:Arial,sans-serif;margin:0px;">
-                                    Sustainable Energy Development Authority (CMS) Malaysia</h3>
+                                    Sustainable Energy Development Authority (UBB) Malaysia</h3>
                             </td>
                         </tr>
                     </table>
