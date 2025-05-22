@@ -5,6 +5,13 @@ import { ApiError } from "../../global/globalError";
 import sendResponse from "../../shared/sendResponse";
 import UserModel from "./user.model";
 import userService from "./user.service";
+import generateCacheKey from "../../helper/cacheKeyGenerator";
+import { TUser } from "./user.interface";
+import { IMeta } from "../../global/globalInterfaces";
+import redis from "../../config/redis";
+import { paginationHelper } from "../../helper/paginitionHelper";
+import filterHelper from "../../helper/filterHelper";
+import { userRole } from "../../shared/constant";
 
 // variables
 const name = "User";
@@ -88,7 +95,6 @@ const removeProfile: RequestHandler = async (req, res, next) => {
 };
 
 // Request body validation schema
-
 export const forgotPassword: RequestHandler = async (req, res, next): Promise<void> => {
   try {
     // Validate request body
@@ -124,8 +130,59 @@ export const resetPassword: RequestHandler = async (req, res, next): Promise<voi
   }
 };
 
+const getAll: RequestHandler = async (req, res, next) => {
+  try {
+    let values: { data: Array<TUser>; meta: IMeta } = { data: [], meta: { limit: 10, page: 1, total: 0 } };
+    // cached data
+    const cacheKey = generateCacheKey(req);
+    const cachedData = await redis.get(cacheKey);
+    // console.log({ cacheKey });
+
+    if (cachedData) {
+      const cachedDataJSON = JSON.parse(cachedData);
+      values = cachedDataJSON;
+    } else {
+      // filter
+      const pagination = paginationHelper(req.query);
+
+      const filter = filterHelper(req.query, req.partialFilter, new UserModel());
+
+      // remove super admin form search
+      filter.role = { $ne: userRole.superAdmin };
+
+      // get data from service
+      const { page, limit, skip, sortCondition, populate } = pagination;
+      const data = await UserModel.find(filter)
+        .limit(limit)
+        .skip(skip)
+        .sort(sortCondition)
+        .populate(populate || "");
+      const total = await UserModel.countDocuments(filter);
+      values = { data, meta: { page, limit, total } };
+
+      if (values?.data?.length) {
+        redis.set(cacheKey, JSON.stringify(values), "EX", 600);
+      }
+    }
+    const { meta, data } = values;
+
+    // payload
+    const payload = {
+      success: true,
+      message: `${name}s fetched successfully`,
+      meta,
+      data,
+    };
+    sendResponse(res, httpStatus.OK, payload);
+    return;
+  } catch (error) {
+    next(error);
+  }
+};
+
 const userController = {
   ...globalControllers,
+  getAll,
   getProfile,
   updateProfile,
   loginUser,

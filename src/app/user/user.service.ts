@@ -1,5 +1,7 @@
+import bcrypt from "bcryptjs";
+import httpStatus from "http-status";
+import jwt from "jsonwebtoken";
 import config from "../../config";
-import globalController from "../../global/global.controller";
 import { ApiError } from "../../global/globalError";
 import { CustomJwtPayload } from "../../global/globalInterfaces";
 import { extractToken } from "../../middleware/auth";
@@ -7,9 +9,6 @@ import { mailTemplate } from "../../utils/makeEmailTemplate";
 import sendEmail from "../../utils/sendMail";
 import type { TUser } from "./user.interface";
 import UserModel from "./user.model";
-import bcrypt from "bcryptjs";
-import httpStatus from "http-status";
-import jwt from "jsonwebtoken";
 
 type LoginPayload = {
   email: string;
@@ -112,7 +111,7 @@ type resetPayload = { token: string; password: string };
 const resetPassword = async (payload: resetPayload): Promise<TUser | null> => {
   console.log(payload);
   try {
-    let token = extractToken(payload.token);
+    const token = extractToken(payload.token);
     console.log(token);
     if (!token) throw new Error(`Invalid Request`);
 
