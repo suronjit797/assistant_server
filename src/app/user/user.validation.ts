@@ -12,9 +12,6 @@ export const userCreateZodSchema = z.object({
     loginId: z.string(),
     isActive: z.boolean(),
     avatar: globalImageValidator,
-    lastLogin: z.date(),
-    otp: z.number(),
-    otpExpiredAt: z.date(),
   }),
 });
 
@@ -35,9 +32,6 @@ export const userUpdateZodSchema = z.object({
     loginId: z.string().optional(),
     isActive: z.string().optional(),
     avatar: globalImageValidator,
-    lastLogin: z.string().optional(),
-    otp: z.string().optional(),
-    otpExpiredAt: z.string().optional(),
   }),
 });
 

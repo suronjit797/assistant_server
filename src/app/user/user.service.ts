@@ -59,7 +59,7 @@ const create = async (user: TUser): Promise<TUser | null> => {
     throw new ApiError(httpStatus.BAD_REQUEST, "Password must be at least 6 characters long");
   }
 
-  const salt = await bcrypt.genSalt(config.sault_round);
+  const salt = await bcrypt.genSalt(config.salt_round);
   const hashedPassword = await bcrypt.hash(user.password, salt);
 
   const userData = { ...user, password: hashedPassword };
@@ -121,7 +121,7 @@ const resetPassword = async (payload: resetPayload): Promise<TUser | null> => {
     console.log(user);
     if (!user) throw new Error(`Invalid Request`);
 
-    const salt = await bcrypt.genSalt(config.sault_round);
+    const salt = await bcrypt.genSalt(config.salt_round);
     const hashedPassword = await bcrypt.hash(payload.password, salt);
     const data = await UserModel.findByIdAndUpdate(user._id, { password: hashedPassword }, { new: true });
 

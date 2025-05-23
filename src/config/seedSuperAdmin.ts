@@ -31,7 +31,7 @@ const seedSuperAdmin = async () => {
         role: "superAdmin",
         loginId: superAdminEmail,
       });
-      // const hashedPassword = await bcrypt.hash(superAdminPassword, config.sault_round);
+      // const hashedPassword = await bcrypt.hash(superAdminPassword, config.salt_round);
 
       // Create new super admin
       // await UserModel.create({

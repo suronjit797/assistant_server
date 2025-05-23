@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import { Document, Model } from "mongoose";
 import { ImageInterface } from "../../global/globalInterfaces";
 
 export type TUser = {
@@ -20,5 +20,7 @@ export type LoginPayload = {
   password: string;
 };
 export type LoginRes = { accessToken: string; refreshToken: string };
+
+export interface TUserDocument extends TUser, Document {}
 
 export type TUserModel = Model<TUser, Record<string, unknown>>;

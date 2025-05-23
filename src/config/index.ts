@@ -9,7 +9,7 @@ export default {
   PORT: Number(process.env.PORT) || 4000,
   DB_URI: process.env.DB_URI as string,
   NODE_ENV: process.env.NODE_ENV as string,
-  sault_round: Number(process.env.SAULT_ROUND),
+  salt_round: Number(process.env.SALT_ROUND),
   Bearer: (process.env.BEARER as string) || "Bearer",
   token: {
     access_token_time: process.env.ACCESS_TOKEN_TIME as StringValue,
