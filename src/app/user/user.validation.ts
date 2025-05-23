@@ -10,7 +10,7 @@ export const userCreateZodSchema = z.object({
     password: z.string(),
     phone: z.string(),
     loginId: z.string(),
-    isActive: z.boolean(),
+    isActive: z.boolean().optional(),
     avatar: globalImageValidator,
   }),
 });
@@ -30,7 +30,7 @@ export const userUpdateZodSchema = z.object({
     role: z.enum(Object.values(userRole) as [string, ...string[]]).optional(),
     password: z.string().optional(),
     loginId: z.string().optional(),
-    isActive: z.string().optional(),
+    isActive: z.boolean().optional(),
     avatar: globalImageValidator,
   }),
 });

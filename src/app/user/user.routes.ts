@@ -31,9 +31,9 @@ userRouter.put("/profile", auth(), validatorMiddleware(userUpdateZodSchema), use
 userRouter.delete("/profile", auth(), userController.removeProfile);
 
 // user
-userRouter.get("/", auth(admin), partialFilterMiddlewares, userController.getAll);
-userRouter.get("/:id", auth(admin), userController.getSingle);
-userRouter.put("/:id", auth(admin), validatorMiddleware(userUpdateZodSchema), userController.update);
+userRouter.get("/", auth(), partialFilterMiddlewares, userController.getAll);
+userRouter.get("/:id", auth(), userController.getSingle);
+userRouter.put("/:id", auth(), validatorMiddleware(userUpdateZodSchema), userController.update);
 userRouter.delete("/:id", auth(admin), userController.remove);
 
 export default userRouter;

@@ -1,17 +1,17 @@
 import { RequestHandler } from "express";
 import httpStatus from "http-status";
+import redis from "../../config/redis";
 import globalController from "../../global/global.controller";
 import { ApiError } from "../../global/globalError";
+import { IMeta } from "../../global/globalInterfaces";
+import generateCacheKey from "../../helper/cacheKeyGenerator";
+import filterHelper from "../../helper/filterHelper";
+import { paginationHelper } from "../../helper/paginitionHelper";
+import { userRole } from "../../shared/constant";
 import sendResponse from "../../shared/sendResponse";
+import { TUser } from "./user.interface";
 import UserModel from "./user.model";
 import userService from "./user.service";
-import generateCacheKey from "../../helper/cacheKeyGenerator";
-import { TUser } from "./user.interface";
-import { IMeta } from "../../global/globalInterfaces";
-import redis from "../../config/redis";
-import { paginationHelper } from "../../helper/paginitionHelper";
-import filterHelper from "../../helper/filterHelper";
-import { userRole } from "../../shared/constant";
 
 // variables
 const name = "User";
@@ -144,11 +144,11 @@ const getAll: RequestHandler = async (req, res, next) => {
     } else {
       // filter
       const pagination = paginationHelper(req.query);
-
       const filter = filterHelper(req.query, req.partialFilter, new UserModel());
 
       // remove super admin form search
       filter.role = { $ne: userRole.superAdmin };
+      filter._id = { $ne: req.user._id };
 
       // get data from service
       const { page, limit, skip, sortCondition, populate } = pagination;

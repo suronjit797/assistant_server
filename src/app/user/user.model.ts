@@ -12,7 +12,7 @@ const userSchema = new Schema<TUserDocument>(
     password: { type: String, required: true, select: false },
     phone: { type: String },
     loginId: { type: String, required: true, unique: true, trim: true },
-    isActive: { type: Boolean, default: true },
+    isActive: { type: Boolean, default: false },
     avatar: ImageSchema,
     lastLogin: { type: Date },
     otp: { type: Number },
