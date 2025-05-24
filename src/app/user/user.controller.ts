@@ -28,6 +28,7 @@ export const loginUser: RequestHandler = async (req, res, next) => {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid credentials");
     }
 
+
     const { accessToken, refreshToken } = data;
 
     const cookieOptions = {

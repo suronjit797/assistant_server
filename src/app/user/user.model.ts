@@ -9,17 +9,12 @@ const userSchema = new Schema<TUserDocument>(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, trim: true },
     role: { type: String, enum: Object.values(userRole), default: "user" },
-    password: { type: String, required: true, select: false },
+    password: { type: String, required: true, select: false, minlength: 6 },
     phone: { type: String },
     loginId: { type: String, required: true, unique: true, trim: true },
     isActive: { type: Boolean, default: false },
     avatar: ImageSchema,
     lastLogin: { type: Date },
-    otp: { type: Number },
-    otpExpiredAt: {
-      type: Date,
-      default: () => new Date(new Date().getTime() + 5 * 60000),
-    },
   },
   { timestamps: true },
 );

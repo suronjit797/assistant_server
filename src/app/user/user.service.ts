@@ -23,14 +23,12 @@ const login = async (payload: LoginPayload): Promise<LoginRes> => {
   const user = await UserModel.findOne({ $or: [{ email: payload.email }, { loginId: payload.email }] }).select(
     "+password",
   );
-  if (!user) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid credentials");
-  }
+  if (!user) throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid credentials");
+  if (!user.isActive) throw new ApiError(httpStatus.BAD_REQUEST, "User is not active. Please contact admin");
 
+  // compare password
   const isPasswordValid = await bcrypt.compare(payload.password, user.password as string);
-  if (!isPasswordValid) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid credentials");
-  }
+  if (!isPasswordValid) throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid credentials");
 
   // Create access and refresh tokens
   const accessToken = jwt.sign({ userId: user._id }, config.token.access_token_secret, {
@@ -44,39 +42,39 @@ const login = async (payload: LoginPayload): Promise<LoginRes> => {
   return { accessToken, refreshToken };
 };
 
-// register a user
-const create = async (user: TUser): Promise<TUser | null> => {
-  const isExist = await UserModel.findOne({ email: user.email });
-  if (isExist) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "User already exists");
-  }
+// register a user //! this config in user model
+// const create = async (user: TUser): Promise<TUser | null> => {
+//   // const isExist = await UserModel.findOne({ email: user.email });
+//   // if (isExist) {
+//   //   throw new ApiError(httpStatus.BAD_REQUEST, "User already exists");
+//   // }
 
-  if (!user.password) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Password is required");
-  }
+//   // if (!user.password) {
+//   //   throw new ApiError(httpStatus.BAD_REQUEST, "Password is required");
+//   // }
 
-  if (user.password.length < 6) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Password must be at least 6 characters long");
-  }
+//   // if (user.password.length < 6) {
+//   //   throw new ApiError(httpStatus.BAD_REQUEST, "Password must be at least 6 characters long");
+//   // }
 
-  const salt = await bcrypt.genSalt(config.salt_round);
-  const hashedPassword = await bcrypt.hash(user.password, salt);
+//   const salt = await bcrypt.genSalt(config.salt_round);
+//   const hashedPassword = await bcrypt.hash(user.password, salt);
 
-  const userData = { ...user, password: hashedPassword };
-  if (!userData.avatar?.url) {
-    userData.avatar = {
-      name: "default avatar",
-      url: `https://ui-avatars.com/api/?name=${userData.name}`,
-      size: 0,
-      status: "active",
-      uid: userData.email,
-    };
-  }
+//   const userData = { ...user, password: hashedPassword };
+//   if (!userData.avatar?.url) {
+//     userData.avatar = {
+//       name: "default avatar",
+//       url: `https://ui-avatars.com/api/?name=${userData.name}`,
+//       size: 0,
+//       status: "active",
+//       uid: userData.email,
+//     };
+//   }
 
-  const newUser = await UserModel.create(userData);
+//   const newUser = await UserModel.create(userData);
 
-  return newUser;
-};
+//   return newUser;
+// };
 
 const forgotPassword = async (email: string): Promise<void> => {
   try {
@@ -131,6 +129,6 @@ const resetPassword = async (payload: resetPayload): Promise<TUser | null> => {
   }
 };
 
-const userService = { login, create, forgotPassword, resetPassword };
+const userService = { login, forgotPassword, resetPassword };
 
 export default userService;

@@ -111,7 +111,7 @@ const globalController = <TType>(
         } else {
           data = await await ModelName.findById(req.params.id);
           if (data) {
-            redis.set(cacheKey, JSON.stringify(data));
+            redis.set(cacheKey, JSON.stringify(data), "EX", 600);
           }
         }
 

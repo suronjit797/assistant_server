@@ -11,8 +11,6 @@ export type TUser = {
   isActive?: boolean;
   avatar?: ImageInterface;
   lastLogin?: Date;
-  otp?: number;
-  otpExpiredAt?: Date;
 };
 
 export type LoginPayload = {
