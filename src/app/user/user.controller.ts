@@ -6,7 +6,7 @@ import { ApiError } from "../../global/globalError";
 import { IMeta } from "../../global/globalInterfaces";
 import generateCacheKey from "../../helper/cacheKeyGenerator";
 import filterHelper from "../../helper/filterHelper";
-import { paginationHelper } from "../../helper/paginitionHelper";
+import { paginationHelper } from "../../helper/paginationHelper";
 import { userRole } from "../../shared/constant";
 import sendResponse from "../../shared/sendResponse";
 import { TUser } from "./user.interface";
@@ -27,7 +27,6 @@ export const loginUser: RequestHandler = async (req, res, next) => {
       // Unauthorized error for failed login attempts
       throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid credentials");
     }
-
 
     const { accessToken, refreshToken } = data;
 

@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import config from ".";
 import UserModel from "../app/user/user.model";
-import userService from "../app/user/user.service";
 
 dotenv.config();
 
@@ -16,33 +15,17 @@ const seedSuperAdmin = async () => {
     }
 
     // Check if super admin already exists
-    const existingSuperAdmin = await UserModel.findOne({
-      email: superAdminEmail,
-      role: "superAdmin",
-    });
+    const existingSuperAdmin = await UserModel.findOne({ email: superAdminEmail, role: "superAdmin" });
 
     if (!existingSuperAdmin) {
-      // Hash password
-
-      await userService.create({
+      await UserModel.create({
         email: superAdminEmail,
         password: superAdminPassword,
         name: superAdminName,
         role: "superAdmin",
         loginId: superAdminEmail,
       });
-      // const hashedPassword = await bcrypt.hash(superAdminPassword, config.salt_round);
-
-      // Create new super admin
-      // await UserModel.create({
-      //   email: superAdminEmail,
-      //   password: hashedPassword,
-      //   name: superAdminName,
-      //   role: "superAdmin",
-      //   loginId: superAdminEmail,
-      // });
-
-      console.log("Super admin created successfully", superAdminPassword);
+      console.log("Super admin created successfully", { email: superAdminEmail, password: superAdminPassword });
     }
   } catch (error) {
     console.error("Error seeding super admin:", error);

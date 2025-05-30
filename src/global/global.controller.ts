@@ -1,15 +1,14 @@
 import { RequestHandler } from "express";
 import httpStatus from "http-status";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
+
 import redis from "../config/redis";
 import generateCacheKey from "../helper/cacheKeyGenerator";
 import filterHelper from "../helper/filterHelper";
-import { paginationHelper } from "../helper/paginitionHelper";
+import { paginationHelper } from "../helper/paginationHelper";
 import sendResponse from "../shared/sendResponse";
 import { ApiError } from "./globalError";
 import type { IMeta } from "./globalInterfaces";
-
-import { Types } from "mongoose";
 
 const { ObjectId } = Types;
 

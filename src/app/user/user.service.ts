@@ -97,7 +97,7 @@ const forgotPassword = async (email: string): Promise<void> => {
       link,
     });
 
-    await sendEmail({ email, subject: "UBB Amanah Berhad Password Reset", text });
+    await sendEmail({ email, subject: "PA Amanah Berhad Password Reset", text });
     return;
   } catch {
     throw new Error("Reset Password Failed");

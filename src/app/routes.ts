@@ -15,8 +15,8 @@ const router = express.Router();
 
 const moduleRoute = [
   { path: "/users", routes: userRouter },
-  { path: "/payments", routes: paymentRouter },
-  { path: "/payments-history", routes: paymentHistoryRouter },
+  // { path: "/payments", routes: paymentRouter },
+  // { path: "/payments-history", routes: paymentHistoryRouter },
   // { path: "/test", routes: testRouter },
 ];
 
