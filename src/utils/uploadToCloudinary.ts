@@ -5,8 +5,6 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 // Configure Multer Storage for Cloudinary
 const storage = new CloudinaryStorage({
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   cloudinary,
   params: async () => ({
     folder: "sk/pa",
