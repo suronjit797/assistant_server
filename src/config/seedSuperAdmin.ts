@@ -24,6 +24,7 @@ const seedSuperAdmin = async () => {
         name: superAdminName,
         role: "superAdmin",
         loginId: superAdminEmail,
+        isActive: true,
       });
       console.log("Super admin created successfully", { email: superAdminEmail, password: superAdminPassword });
     }

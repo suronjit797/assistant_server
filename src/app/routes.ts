@@ -1,8 +1,8 @@
 import express from "express";
 import userRouter from "./user/user.routes";
 import { uploadCloudinary } from "../utils/uploadToCloudinary";
-import paymentRouter from "./payments/payment.routes";
-import paymentHistoryRouter from "./paymentHistory/paymentHistory.routes";
+// import paymentRouter from "./payments/payment.routes";
+// import paymentHistoryRouter from "./paymentHistory/paymentHistory.routes";
 // import bukkuAxios from "../utils/axiosUtils";
 
 const router = express.Router();
