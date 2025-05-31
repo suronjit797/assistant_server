@@ -5,11 +5,14 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 // Configure Multer Storage for Cloudinary
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "ivis3/ubb",
-    transformation: [{ width: 1024 }, { quality: "auto:eco" }, { fetch_format: "webp" }],
-  } as Record<string, any>,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
+  cloudinary,
+  params: async () => ({
+    folder: "sk/pa",
+    format: "webp", // Recommended to use format here
+    transformation: [{ width: 1024, crop: "limit" }, { quality: "auto:eco" }],
+  }),
 });
 
 export const uploadCloudinary = multer({ storage });

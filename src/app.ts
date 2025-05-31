@@ -1,21 +1,20 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
-// import csurf from "csurf";
 import type { Application, Request, Response } from "express";
 import express from "express";
-import fs from "fs";
-import helmet from "helmet";
 import morgan from "morgan";
-import path from "path";
+// import csurf from "csurf";
+// import fs from "fs";
+// import helmet from "helmet";
+// import path from "path";
+// import config from "./config";
 import router from "./app/routes";
-import config from "./config";
 import { metricsEndpointJsonMiddleware, prometheusMetricsMiddleware } from "./middleware/promMiddleware";
 import globalError from "./global/globalError";
 
 const app: Application = express();
-const buildPath = config.FRONTEND_BUILD_PATH;
+// const buildPath = config.FRONTEND_BUILD_PATH;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 // const allowedOrigins: any = ["http://localhost:3000", "http://199.250.210.184:5000", "http://localhost:5000"];
 
 // app.use(
@@ -30,7 +29,7 @@ const buildPath = config.FRONTEND_BUILD_PATH;
 //   }),
 // );
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
@@ -44,8 +43,6 @@ app.use(prometheusMetricsMiddleware);
 // app.use(csurf({ cookie: true }));
 // route
 
-
-
 app.get("/metrics", metricsEndpointJsonMiddleware);
 
 // main api routes
@@ -53,16 +50,16 @@ app.use("/api/v1", router);
 // handle not found route
 
 // frontend
-if (fs.existsSync(buildPath + "/index.html")) {
-  console.log("Found ----------------> ", buildPath);
-  app.use("/", express.static(path.resolve(buildPath)));
-  app.use("*", function (req, res) {
-    res.sendFile(path.resolve(buildPath, "index.html"));
-  });
-} else {
-  console.log("Not found ----------------> ", buildPath);
-  app.use("/", express.static("public"));
-}
+// if (fs.existsSync(buildPath + "/index.html")) {
+//   console.log("Found ----------------> ", buildPath);
+//   app.use("/", express.static(path.resolve(buildPath)));
+//   app.use("*", function (req, res) {
+//     res.sendFile(path.resolve(buildPath, "index.html"));
+//   });
+// } else {
+//   console.log("Not found ----------------> ", buildPath);
+//   app.use("/", express.static("public"));
+// }
 
 app.use((req: Request, res: Response) => {
   res.status(404).send({
