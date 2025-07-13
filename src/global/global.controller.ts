@@ -28,6 +28,7 @@ const globalController = <TType>(
   return {
     // create
     create: async (req, res, next) => {
+      console.log("body2", req.body);
       try {
         // invalid cache
         const cacheKey = `*api:v1:${name}*`.toLocaleLowerCase();

@@ -6,9 +6,6 @@ import config from "./config";
 import connectDB from "./config/db";
 import { errorLogger, successLogger } from "./shared/logger";
 
-// bullmq
-import "./shared/bullmq/bulkPaymentWorker";
-
 let server: Server;
 
 process.on("uncaughtException", (error) => {

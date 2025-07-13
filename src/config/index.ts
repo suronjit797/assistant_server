@@ -35,11 +35,4 @@ export default {
   REDIS_HOST: process.env.REDIS_HOST || "localhost",
   REDIS_NAME: process.env.REDIS_NAME || "app1",
 
-  // billplz
-  BILLPLZ_API_KEY: process.env.BILLPLZ_API_KEY || "",
-  BILLPLZ_COLLECTION_ID: process.env.BILLPLZ_COLLECTION_ID || "",
-  BILLPLZ_X_SIGNATURE: process.env.BILLPLZ_X_SIGNATURE || "",
-  BILLPLZ_BASE_API: process.env.BILLPLZ_BASE_API || "",
-  BILLPLZ_CALLBACK_URL: process.env.BILLPLZ_CALLBACK_URL || "",
-  BILLPLZ_REDIRECT_URL: process.env.BILLPLZ_REDIRECT_URL || "",
 };

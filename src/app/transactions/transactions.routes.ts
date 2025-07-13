@@ -11,7 +11,7 @@ transactionRouter.post(
   "/",
   validatorMiddleware(transactionCreateValidate),
   setUserToBody,
-  transactionsController.create
+  transactionsController.create,
 );
 
 transactionRouter.get("/", transactionsController.getAll);
