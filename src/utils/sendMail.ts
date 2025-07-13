@@ -24,7 +24,7 @@ const sendEmail = async ({ email, subject, text }: SendEmailOptions): Promise<vo
     await transporter.verify();
 
     const mailOptions = {
-      from: `PA <${config.EMAIL_USER}>`,
+      from: `UBB <${config.EMAIL_USER}>`,
       to: email,
       subject: subject,
       html: text,

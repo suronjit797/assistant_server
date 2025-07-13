@@ -15,9 +15,14 @@ const seedSuperAdmin = async () => {
     }
 
     // Check if super admin already exists
-    const existingSuperAdmin = await UserModel.findOne({ email: superAdminEmail, role: "superAdmin" });
+    const existingSuperAdmin = await UserModel.findOne({
+      email: superAdminEmail,
+      role: "superAdmin",
+    });
 
     if (!existingSuperAdmin) {
+      // Hash password
+
       await UserModel.create({
         email: superAdminEmail,
         password: superAdminPassword,
@@ -26,7 +31,7 @@ const seedSuperAdmin = async () => {
         loginId: superAdminEmail,
         isActive: true,
       });
-      console.log("Super admin created successfully", { email: superAdminEmail, password: superAdminPassword });
+      console.log("Super admin created successfully", superAdminPassword);
     }
   } catch (error) {
     console.error("Error seeding super admin:", error);

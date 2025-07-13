@@ -97,7 +97,7 @@ const forgotPassword = async (email: string): Promise<void> => {
       link,
     });
 
-    await sendEmail({ email, subject: "PA Amanah Berhad Password Reset", text });
+    await sendEmail({ email, subject: "UBB Amanah Berhad Password Reset", text });
     return;
   } catch {
     throw new Error("Reset Password Failed");
@@ -107,16 +107,16 @@ const forgotPassword = async (email: string): Promise<void> => {
 type resetPayload = { token: string; password: string };
 
 const resetPassword = async (payload: resetPayload): Promise<TUser | null> => {
-  console.log(payload);
+  // console.log(payload);
   try {
     const token = extractToken(payload.token);
-    console.log(token);
+    // console.log(token);
     if (!token) throw new Error(`Invalid Request`);
 
     const decoded = jwt.verify(token, config.token.access_token_secret) as CustomJwtPayload;
-    console.log(decoded);
+    // console.log(decoded);
     const user = UserModel.findById(decoded?._id);
-    console.log(user);
+    // console.log(user);
     if (!user) throw new Error(`Invalid Request`);
 
     const salt = await bcrypt.genSalt(config.salt_round);

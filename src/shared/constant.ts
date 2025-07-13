@@ -16,7 +16,6 @@ export const userRoleFormate = {
   superAdmin: "Super Admin",
 };
 
-
 export const ImageSchema = {
   uid: String,
   name: String,

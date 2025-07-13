@@ -1,14 +1,15 @@
 import { RequestHandler } from "express";
 import httpStatus from "http-status";
-import { Model, Types } from "mongoose";
-
+import { Model } from "mongoose";
 import redis from "../config/redis";
 import generateCacheKey from "../helper/cacheKeyGenerator";
 import filterHelper from "../helper/filterHelper";
-import { paginationHelper } from "../helper/paginationHelper";
+import { paginationHelper } from "../helper/paginitionHelper";
 import sendResponse from "../shared/sendResponse";
 import { ApiError } from "./globalError";
 import type { IMeta } from "./globalInterfaces";
+
+import { Types } from "mongoose";
 
 const { ObjectId } = Types;
 
@@ -29,10 +30,10 @@ const globalController = <TType>(
     create: async (req, res, next) => {
       try {
         // invalid cache
-        const cacheKey = `api:v1:${name}*`.toLocaleLowerCase();
+        const cacheKey = `*api:v1:${name}*`.toLocaleLowerCase();
         const key = await redis.keys(cacheKey);
         if (key?.length > 0) {
-          redis.del(key);
+          redis.call("DEL", ...key);
         }
 
         const data = await ModelName.create(req.body);
@@ -131,10 +132,10 @@ const globalController = <TType>(
     update: async (req, res, next) => {
       try {
         // invalid cache
-        const cacheKey = `api:v1:${name}*`.toLocaleLowerCase();
+        const cacheKey = `*api:v1:${name}*`.toLocaleLowerCase();
         const key = await redis.keys(cacheKey);
         if (key?.length > 0) {
-          redis.del(key);
+          redis.call("DEL", ...key);
         }
 
         const data = await ModelName.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
@@ -159,11 +160,11 @@ const globalController = <TType>(
     remove: async (req, res, next) => {
       try {
         // invalid cache
-        const cacheKey = `api:v1:${name}*`.toLocaleLowerCase();
+        const cacheKey = `*api:v1:${name}*`.toLocaleLowerCase();
         const key = await redis.keys(cacheKey);
         // console.log(key, cacheKey);
         if (key?.length > 0) {
-          redis.del(key);
+          redis.call("DEL", ...key);
         }
 
         const data = await ModelName.findByIdAndDelete(req.params.id);
@@ -184,10 +185,10 @@ const globalController = <TType>(
     removeMany: async (req, res, next) => {
       try {
         // invalid cache
-        const cacheKey = `api:v1:${name}*`.toLocaleLowerCase();
+        const cacheKey = `*api:v1:${name}*`.toLocaleLowerCase();
         const key = await redis.keys(cacheKey);
 
-        if (key?.length > 0) redis.del(key);
+        if (key?.length > 0) redis.call("DEL", ...key);
 
         const ids = req.body.ids;
         if (!ids || !ids.length) throw new ApiError(httpStatus.BAD_REQUEST, "No ids provided");
