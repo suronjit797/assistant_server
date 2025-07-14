@@ -28,7 +28,6 @@ export const loginUser: RequestHandler = async (req, res, next) => {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid credentials");
     }
 
-
     const { accessToken, refreshToken } = data;
 
     const cookieOptions = {
@@ -145,7 +144,7 @@ const getAll: RequestHandler = async (req, res, next) => {
     } else {
       // filter
       const pagination = paginationHelper(req.query);
-      const filter = filterHelper(req.query, req.partialFilter, new UserModel());
+      const filter = filterHelper(req.query, req.partialFilter || [], new UserModel());
 
       // remove super admin form search
       filter.role = { $ne: userRole.superAdmin };

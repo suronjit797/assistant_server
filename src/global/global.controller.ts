@@ -28,7 +28,6 @@ const globalController = <TType>(
   return {
     // create
     create: async (req, res, next) => {
-      console.log("body2", req.body);
       try {
         // invalid cache
         const cacheKey = `*api:v1:${name}*`.toLocaleLowerCase();
@@ -67,7 +66,7 @@ const globalController = <TType>(
           // filter
           const pagination = paginationHelper(req.query);
 
-          const filter = filterHelper(req.query, req.partialFilter, new ModelName());
+          const filter = filterHelper(req.query, req.partialFilter||[], new ModelName());
 
           // get data from service
           const { page, limit, skip, sortCondition, populate } = pagination;

@@ -1,9 +1,14 @@
-import express from "express";
+import express, { RequestHandler } from "express";
 import { transactionCreateValidate, transactionUpdateValidate } from "./transactions.validation";
 // import { auth } from "../../../middleware/auth";
 import transactionsController from "./transactions.controller";
 import { validatorMiddleware } from "../../middleware/zodValidator";
 import { setUserToBody } from "./transactions.middleware";
+
+const partialFilterMiddlewares: RequestHandler = (req, res, next) => {
+  req.partialFilter = ["title", "type"];
+  next();
+};
 
 const transactionRouter = express.Router();
 
@@ -14,7 +19,7 @@ transactionRouter.post(
   transactionsController.create,
 );
 
-transactionRouter.get("/", transactionsController.getAll);
+transactionRouter.get("/", partialFilterMiddlewares, transactionsController.getAll);
 transactionRouter.get("/summary", transactionsController.summary);
 transactionRouter.get("/overall", transactionsController.overall);
 
