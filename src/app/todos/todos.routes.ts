@@ -6,22 +6,18 @@ import { validatorMiddleware } from "../../middleware/zodValidator";
 import { setUserToBody } from "./todos.middleware";
 
 const partialFilterMiddlewares: RequestHandler = (req, res, next) => {
-  req.partialFilter = ["title", "type"];
+  req.partialFilter = ["title", "description", "priority"];
   next();
 };
 
 const todoRouter = express.Router();
 
-todoRouter.post(
-  "/",
-  validatorMiddleware(todoCreateValidate),
-  setUserToBody,
-  todosController.create,
-);
+todoRouter.post("/", validatorMiddleware(todoCreateValidate), setUserToBody, todosController.create);
 
 todoRouter.get("/", partialFilterMiddlewares, todosController.getAll);
 todoRouter.get("/:id", todosController.getSingle);
 todoRouter.put("/:id", validatorMiddleware(todoUpdateValidate), todosController.update);
 todoRouter.delete("/:id", todosController.remove);
+todoRouter.post("/delete-many", todosController.removeMany);
 
 export default todoRouter;

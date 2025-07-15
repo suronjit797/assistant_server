@@ -3,12 +3,14 @@ import userRouter from "./user/user.routes";
 import { uploadCloudinary } from "../utils/uploadToCloudinary";
 import transactionRouter from "./transactions/transactions.routes";
 import { auth } from "../middleware/auth";
+import todoRouter from "./todos/todos.routes";
 
 const router = express.Router();
 
 const moduleRoute = [
   { path: "/users", routes: userRouter, auth: false },
   { path: "/transactions", routes: transactionRouter, auth: true },
+  { path: "/todos", routes: todoRouter, auth: true },
 ];
 
 moduleRoute.forEach((route) =>

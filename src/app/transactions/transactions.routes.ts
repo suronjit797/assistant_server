@@ -26,5 +26,6 @@ transactionRouter.get("/overall", transactionsController.overall);
 transactionRouter.get("/:id", transactionsController.getSingle);
 transactionRouter.put("/:id", validatorMiddleware(transactionUpdateValidate), transactionsController.update);
 transactionRouter.delete("/:id", transactionsController.remove);
+transactionRouter.post("/delete-many", transactionsController.removeMany);
 
 export default transactionRouter;
