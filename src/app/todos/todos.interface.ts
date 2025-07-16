@@ -10,4 +10,4 @@ export interface ITodos {
   isCompleted: boolean;
 }
 
-export type TTodosModel = Model<ITodos, Record<string, unknown>>;
+export type ITodosModel = Model<ITodos, Record<string, unknown>>;

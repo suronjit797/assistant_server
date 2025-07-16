@@ -1,7 +1,8 @@
 import { Schema, model } from "mongoose";
 import { todosPriorities } from "../../shared/constant";
+import { ITodos, ITodosModel } from "./todos.interface";
 
-const todosSchema = new Schema(
+const todosSchema = new Schema<ITodos>(
   {
     title: { type: String, required: true, trim: true },
     description: { type: String, default: "" },
@@ -15,4 +16,4 @@ const todosSchema = new Schema(
   { timestamps: true },
 );
 
-export const TodosModel = model("Todo", todosSchema);
+export const TodosModel = model<ITodos, ITodosModel>("Todo", todosSchema);

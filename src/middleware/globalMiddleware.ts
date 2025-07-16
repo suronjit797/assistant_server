@@ -1,7 +1,6 @@
 import { RequestHandler } from "express";
 
 export const setUserToBody: RequestHandler = async (req, res, next) => {
-  console.log(req.user);
   try {
     req.body.user = req.user._id;
     next();
@@ -9,3 +8,10 @@ export const setUserToBody: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const partialFilterMiddlewares =
+  (partialFilter: string[]): RequestHandler =>
+  (req, res, next) => {
+    req.partialFilter = partialFilter;
+    next();
+  };
