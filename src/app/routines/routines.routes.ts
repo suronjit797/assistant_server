@@ -4,14 +4,14 @@ import { partialFilterMiddlewares, setUserToBody } from "../../middleware/global
 import { validatorMiddleware } from "../../middleware/zodValidator";
 import todosController from "./routines.controller";
 
-const todoRouter = express.Router();
+const routineRouter = express.Router();
 
-todoRouter.post("/", validatorMiddleware(routineCreateValidate), setUserToBody, todosController.create);
+routineRouter.post("/", validatorMiddleware(routineCreateValidate), setUserToBody, todosController.create);
 
-todoRouter.get("/", partialFilterMiddlewares(["title", "description", "priority"]), todosController.getAll);
-todoRouter.get("/:id", todosController.getSingle);
-todoRouter.put("/:id", validatorMiddleware(routineUpdateValidate), todosController.update);
-todoRouter.delete("/:id", todosController.remove);
-todoRouter.post("/delete-many", todosController.removeMany);
+routineRouter.get("/", partialFilterMiddlewares(["title", "description", "priority"]), todosController.getAll);
+routineRouter.get("/:id", todosController.getSingle);
+routineRouter.put("/:id", validatorMiddleware(routineUpdateValidate), todosController.update);
+routineRouter.delete("/:id", todosController.remove);
+routineRouter.post("/delete-many", todosController.removeMany);
 
-export default todoRouter;
+export default routineRouter;
