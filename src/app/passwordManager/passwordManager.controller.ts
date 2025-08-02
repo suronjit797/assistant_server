@@ -1,108 +1,42 @@
+import { decrypt } from "./../../helper/cryptoHelper";
+import bcrypt from "bcryptjs";
 import httpStatus from "http-status";
 import { RequestHandler } from "express";
-import globalController from "../../global/global.controller";
+import UserModel from "../user/user.model";
+import { ApiError } from "../../global/globalError";
 import PasswordManagerModel from "./passwordManager.model";
-import dayjs from "dayjs";
-import sendResponse from "../../shared/sendResponse";
-import generateCacheKey from "../../helper/cacheKeyGenerator";
-import redis from "../../config/redis";
+import { sendResponse } from "express-easy-curd";
 
-// variables
-const name = "PasswordManager";
-// global
-const globalControllers = globalController(PasswordManagerModel, name);
-
-const summary: RequestHandler = async (req, res, next) => {
+const passwordDecrypt: RequestHandler = async (req, res, next) => {
   try {
-    const { month, year } = req.query;
+    const { password, id } = req.body;
+    const { _id } = req.user;
 
-    // cached data
-    const cacheKey = generateCacheKey(req);
-    const cachedData = await redis.get(cacheKey);
+    const user = await UserModel.findById(_id).select("+password").lean();
 
-    let data;
+    if (!user) throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid credentials");
+    if (!user.isActive) throw new ApiError(httpStatus.BAD_REQUEST, "User is not active. Please contact admin");
 
-    if (cachedData) {
-      const cachedDataJSON = JSON.parse(cachedData);
-      data = cachedDataJSON;
-    } else {
-      const m = Number(month ?? dayjs().month() + 1);
-      const y = Number(year ?? dayjs().year());
+    // compare password
+    const isPasswordValid = await bcrypt.compare(password, user.password as string);
+    if (!isPasswordValid) throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid credentials");
 
-      const startOfMonth = dayjs(`${y}-${m}-01`).startOf("month").toDate();
-      const endOfMonth = dayjs(startOfMonth).endOf("month").toDate();
+    const pm = await PasswordManagerModel.findById(id).lean();
 
-      // MongoDB Aggregation: All-time
-      const allTimePipeline = [
-        {
-          $group: {
-            _id: "$type",
-            totalAmount: { $sum: "$amount" },
-          },
-        },
-      ];
-
-      // MongoDB Aggregation: Monthly
-      const monthlyPipeline = [
-        {
-          $match: {
-            createdAt: {
-              $gte: startOfMonth,
-              $lte: endOfMonth,
-            },
-          },
-        },
-        {
-          $group: {
-            _id: "$type",
-            totalAmount: { $sum: "$amount" },
-          },
-        },
-      ];
-
-      const [allTime, monthly] = await Promise.all([
-        PasswordManagerModel.aggregate(allTimePipeline),
-        PasswordManagerModel.aggregate(monthlyPipeline),
-      ]);
-
-      // Format results
-      const format = (arr: { _id: string; totalAmount: number }[]) =>
-        arr.reduce(
-          (acc, cur) => {
-            acc[cur._id] = cur.totalAmount;
-            return acc;
-          },
-          {} as Record<string, number>,
-        );
-
-      data = {
-        allTime: format(allTime),
-        month: `${m}`.padStart(2, "0"),
-        year: y,
-        monthly: format(monthly),
-      };
-    }
+    if (!pm?.encryptedPassword) throw new ApiError(500, "server error occurred");
+    const decryptedPassword = await decrypt(pm?.encryptedPassword, _id);
+    console.log(decryptedPassword);
 
     const payload = {
       success: true,
-      message: `PasswordManager summary fetched successfully`,
-      data,
+      message: "successfully decrypt",
+      data: { ...pm, decryptedPassword: decryptedPassword },
     };
 
-    sendResponse(res, httpStatus.OK, payload);
-
-    res.json();
+    return sendResponse(res, 200, payload);
   } catch (error) {
     next(error);
   }
 };
 
-const overall: RequestHandler = async (req, res, next) => {
-  try {
-    console.log("overall");
-  } catch (error) {
-    next(error);
-  }
-};
-
-export default { ...globalControllers, summary, overall };
+export default { passwordDecrypt };

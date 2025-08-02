@@ -2,7 +2,6 @@ import { z } from "zod";
 import { passwordManagerTypes } from "../../shared/constant";
 
 const baseSchema = z.object({
-  user: z.string(),
   website: z.string(),
   username: z.string(),
   encryptedPassword: z.string(),

@@ -5,6 +5,7 @@ import transactionRouter from "./transactions/transactions.routes";
 import { auth } from "../middleware/auth";
 import todoRouter from "./todos/todos.routes";
 import routineRouter from "./routines/routines.routes";
+import pmRouter from "./passwordManager/passwordManager.routes";
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ const moduleRoute = [
   { path: "/transactions", routes: transactionRouter, auth: true },
   { path: "/todos", routes: todoRouter, auth: true },
   { path: "/routines", routes: routineRouter, auth: true },
+  { path: "/password-manager", routes: pmRouter, auth: true },
 ];
 
 moduleRoute.forEach((route) =>
