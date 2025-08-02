@@ -54,7 +54,7 @@ app.use("/api/v1", router);
 if (fs.existsSync(buildPath + "/index.html")) {
   console.log("Found ----------------> ", buildPath);
   app.use("/", express.static(path.resolve(buildPath)));
-  app.use("*", function (req, res) {
+  app.use(function (req:Request, res:Response) {
     res.sendFile(path.resolve(buildPath, "index.html"));
   });
 } else {

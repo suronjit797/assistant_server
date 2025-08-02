@@ -12,6 +12,7 @@ export const userCreateZodSchema = z.object({
     loginId: z.string(),
     isActive: z.boolean().optional(),
     avatar: globalImageValidator,
+    secret: z.string().min(4).max(16),
   }),
 });
 
@@ -32,6 +33,7 @@ export const userUpdateZodSchema = z.object({
     loginId: z.string().optional(),
     isActive: z.boolean().optional(),
     avatar: globalImageValidator,
+    secret: z.string().min(4).max(16).optional(),
   }),
 });
 

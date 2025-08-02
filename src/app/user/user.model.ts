@@ -15,6 +15,8 @@ const userSchema = new Schema<TUserDocument>(
     isActive: { type: Boolean, default: false },
     avatar: ImageSchema,
     lastLogin: { type: Date },
+    secret: { type: String, require: true, trim: true, select: false },
+    salt: { type: String, trim: true, select: false },
   },
   { timestamps: true },
 );

@@ -36,7 +36,6 @@ export const transactionsTypesObj = {
 
 export const transactionsTypes = Object.keys(transactionsTypesObj);
 
-
 // todos
 export const todosPriorityObj = {
   low: "low",
@@ -45,7 +44,6 @@ export const todosPriorityObj = {
 };
 
 export const todosPriorities = Object.keys(todosPriorityObj);
-
 
 // routines
 export const dayConstantsObj = {
@@ -59,3 +57,14 @@ export const dayConstantsObj = {
 };
 
 export const dayConstants = Object.keys(dayConstantsObj);
+
+// passwordManagerTypes
+export const passwordManagerTypesObj = {
+  social: "social",
+  banking: "banking",
+  work: "work",
+  email: "email",
+  other: "other",
+};
+
+export const passwordManagerTypes = Object.keys(passwordManagerTypesObj);

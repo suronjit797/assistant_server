@@ -35,4 +35,6 @@ export default {
   REDIS_HOST: process.env.REDIS_HOST || "localhost",
   REDIS_NAME: process.env.REDIS_NAME || "app1",
 
+  // crypto secret:
+  CRYPTO_SECRET: (process.env.CRYPTO_SECRET as string) || "",
 };
