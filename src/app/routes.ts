@@ -8,6 +8,7 @@ import routineRouter from "./routines/routines.routes";
 import pmRouter from "./passwordManager/passwordManager.routes";
 import diaryRouter from "./diary/diary.routes";
 import blogRouter from "./blog/blog.routes";
+import contactRouter from "./contacts/contacts.routes";
 
 const router = express.Router();
 
@@ -19,6 +20,7 @@ const moduleRoute = [
   { path: "/password-manager", routes: pmRouter, auth: true },
   { path: "/diary", routes: diaryRouter, auth: true },
   { path: "/blog", routes: blogRouter, auth: true },
+  { path: "/contact", routes: contactRouter, auth: true },
 ];
 
 moduleRoute.forEach((route) =>
