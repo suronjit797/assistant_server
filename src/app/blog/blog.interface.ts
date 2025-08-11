@@ -5,7 +5,7 @@ export interface IBlog extends Document {
   slug: string;
   content: string;
   excerpt?: string;
-  author: ObjectId;
+  user: ObjectId;
   category?: string;
   tags?: string[];
   coverImage?: string;

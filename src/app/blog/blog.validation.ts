@@ -20,7 +20,6 @@ const baseSchema = z.object({
   slug: z.string().min(1, "Slug is required"),
   content: z.string().min(1, "Content is required"),
   excerpt: z.string().optional(),
-  author: z.string().min(1, "Author ID is required"),
   category: z.string().optional(),
   tags: z.array(z.string()).optional(),
   coverImage: z.string().optional(),

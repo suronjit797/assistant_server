@@ -7,7 +7,7 @@ const BlogSchema: Schema<IBlog> = new Schema(
     slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
     content: { type: String, required: true },
     excerpt: { type: String, trim: true },
-    author: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     category: { type: String, trim: true },
     tags: [{ type: String, trim: true }],
     coverImage: { type: String, trim: true },
@@ -39,7 +39,7 @@ const BlogSchema: Schema<IBlog> = new Schema(
 );
 
 // Index for search optimization
-BlogSchema.index({ title: "text", content: "text", tags: 1 });
+BlogSchema.index({ title: "text", content: "text" });
 
 const BlogModel = model<IBlog>("Blog", BlogSchema);
 export default BlogModel;
