@@ -15,3 +15,7 @@ export const partialFilterMiddlewares =
     req.partialFilter = partialFilter;
     next();
   };
+
+export const disabledMiddleware: RequestHandler = async (req, res) => {
+  return res.status(404).send("route not found");
+};

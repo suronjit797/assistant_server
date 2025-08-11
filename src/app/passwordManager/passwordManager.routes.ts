@@ -6,6 +6,7 @@ import PasswordManagerModel from "./passwordManager.model";
 import { pmCreateValidate, pmUpdateValidate } from "./passwordManager.validation";
 import redis from "../../config/redis";
 import passwordManagerController from "./passwordManager.controller";
+import { disabledMiddleware } from "../../middleware/globalMiddleware";
 
 const changeBodyMiddleWare: RequestHandler = async (req, res, next) => {
   try {
@@ -18,9 +19,6 @@ const changeBodyMiddleWare: RequestHandler = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
-const disabledMiddleware: RequestHandler = async (req, res) => {
-  return res.status(404).send("route not found");
 };
 
 const pmRouter = Router();
