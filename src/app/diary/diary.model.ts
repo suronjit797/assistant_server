@@ -33,7 +33,7 @@ const DiarySchema = new Schema<IDiary>(
 );
 
 // Index for quick search
-DiarySchema.index({ title: "text", tags: 1, date: 1 });
+// DiarySchema.index({ title: "text", tags: 1, date: 1 });
 
-const DairyModel = model<IDiary>("Diary", DiarySchema);
-export default DairyModel;
+const DiaryModel = model<IDiary>("Diary", DiarySchema);
+export default DiaryModel;

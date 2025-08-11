@@ -20,10 +20,9 @@ const changeBodyMiddleWare: RequestHandler = async (req, res, next) => {
   }
 };
 
-
-const dairyRouter = generateCrudRoutes({
+const diaryRouter = generateCrudRoutes({
   mongooseModel: PasswordManagerModel,
-  name: "Dairy",
+  name: "Diary",
   ioredis: redis,
   cachedTime: 600,
   middlewares: {
@@ -34,5 +33,4 @@ const dairyRouter = generateCrudRoutes({
   },
 });
 
-
-export default dairyRouter;
+export default diaryRouter;

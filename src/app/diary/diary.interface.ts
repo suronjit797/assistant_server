@@ -19,6 +19,4 @@ export interface IDiary extends Document {
     content: string;
     updatedAt: Date;
   }[];
-  createdAt: Date;
-  updatedAt: Date;
 }

@@ -6,6 +6,7 @@ import { auth } from "../middleware/auth";
 import todoRouter from "./todos/todos.routes";
 import routineRouter from "./routines/routines.routes";
 import pmRouter from "./passwordManager/passwordManager.routes";
+import diaryRouter from "./diary/diary.routes";
 
 const router = express.Router();
 
@@ -15,6 +16,7 @@ const moduleRoute = [
   { path: "/todos", routes: todoRouter, auth: true },
   { path: "/routines", routes: routineRouter, auth: true },
   { path: "/password-manager", routes: pmRouter, auth: true },
+  { path: "/diary", routes: diaryRouter, auth: true },
 ];
 
 moduleRoute.forEach((route) =>
