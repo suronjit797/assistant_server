@@ -2,20 +2,20 @@ import { generateCrudRoutes } from "express-easy-curd";
 import redis from "../../config/redis";
 import { disabledMiddleware } from "../../middleware/globalMiddleware";
 import { validatorMiddleware } from "../../middleware/zodValidator";
-import PasswordManagerModel from "./diary.model";
-import { diaryCreateValidate, diaryUpdateValidate } from "./diary.validation";
+import PasswordManagerModel from "./blog.model";
+import { blogCreateValidate, blogUpdateValidate } from "./blog.validation";
 
-const diaryRouter = generateCrudRoutes({
+const blogRouter = generateCrudRoutes({
   mongooseModel: PasswordManagerModel,
-  name: "Diary",
+  name: "Blog",
   ioredis: redis,
   cachedTime: 600,
   middlewares: {
-    create: [validatorMiddleware(diaryCreateValidate)],
-    update: [validatorMiddleware(diaryUpdateValidate)],
+    create: [validatorMiddleware(blogCreateValidate)],
+    update: [validatorMiddleware(blogUpdateValidate)],
     removeMany: [disabledMiddleware],
     updateMany: [disabledMiddleware],
   },
 });
 
-export default diaryRouter;
+export default blogRouter;
