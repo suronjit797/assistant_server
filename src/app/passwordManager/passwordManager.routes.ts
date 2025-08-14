@@ -1,5 +1,5 @@
 import { RequestHandler, Router } from "express";
-import { generateCrudRoutes } from "express-easy-curd";
+import { generateCrudRoutes, partialFilterMiddlewares } from "express-easy-curd";
 import { validatorMiddleware } from "../../middleware/zodValidator";
 import { encrypt } from "./../../helper/cryptoHelper";
 import PasswordManagerModel from "./passwordManager.model";
@@ -21,6 +21,8 @@ const changeBodyMiddleWare: RequestHandler = async (req, res, next) => {
   }
 };
 
+const partialFilters = ["website", "username", "note", "category"];
+
 const pmRouter = Router();
 
 const curdRouter = generateCrudRoutes({
@@ -29,6 +31,7 @@ const curdRouter = generateCrudRoutes({
   ioredis: redis,
   cachedTime: 600,
   middlewares: {
+    getAll: [partialFilterMiddlewares(partialFilters)],
     create: [validatorMiddleware(pmCreateValidate), changeBodyMiddleWare],
     update: [validatorMiddleware(pmUpdateValidate), changeBodyMiddleWare],
     removeMany: [disabledMiddleware],
