@@ -19,7 +19,6 @@ const bootFunctions = async () => {
 
     // connect mongodb
     await connectDB();
-
     server = await serverLogger();
 
     // server = app.listen(config.PORT, config.NODE_ENV === "development" ? "0.0.0.0" : "localhost", async () => {
