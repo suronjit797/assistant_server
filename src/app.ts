@@ -15,7 +15,6 @@ const app: Application = express();
 const buildPath = config.FRONTEND_BUILD_PATH;
 
 // const allowedOrigins: any = ["http://localhost:3000", "http://199.250.210.184:5000", "http://localhost:5000"];
-
 // app.use(
 //   cors({
 //     origin: function (origin, callback) {
