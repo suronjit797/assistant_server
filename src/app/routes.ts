@@ -1,4 +1,4 @@
-import express from "express";
+import express, { RequestHandler } from "express";
 import userRouter from "./user/user.routes";
 import { uploadCloudinary } from "../utils/uploadToCloudinary";
 import transactionRouter from "./transactions/transactions.routes";
@@ -10,6 +10,16 @@ import diaryRouter from "./diary/diary.routes";
 import blogRouter from "./blog/blog.routes";
 import contactRouter from "./contacts/contacts.routes";
 import eventsRouter from "./events/events.routes";
+import { userRole } from "../shared/constant";
+
+const queryMiddleware: RequestHandler = (req, res, next) => {
+  try {
+    if (req.user?.role !== userRole.superAdmin && req.user?._id) req.query.user = req.user._id;
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
 
 const router = express.Router();
 
@@ -26,7 +36,7 @@ const moduleRoute = [
 ];
 
 moduleRoute.forEach((route) =>
-  route?.auth ? router.use(route.path, auth(), route.routes) : router.use(route.path, route.routes),
+  route?.auth ? router.use(route.path, auth(), queryMiddleware, route.routes) : router.use(route.path, route.routes),
 );
 
 // image upload

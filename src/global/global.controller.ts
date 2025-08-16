@@ -66,10 +66,12 @@ const globalController = <TType>(
           // filter
           const pagination = paginationHelper(req.query);
 
-          const filter = filterHelper(req.query, req.partialFilter||[], new ModelName());
+          const filter = filterHelper(req.query, req.partialFilter || [], new ModelName());
 
           // get data from service
           const { page, limit, skip, sortCondition, populate } = pagination;
+          console.log({ populate });
+
           const data = await ModelName.find(filter)
             .limit(limit)
             .skip(skip)

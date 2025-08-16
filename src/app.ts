@@ -28,12 +28,25 @@ const buildPath = config.FRONTEND_BUILD_PATH;
 //   }),
 // );
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
 app.use(cookieParser());
 app.use(prometheusMetricsMiddleware);
+
+app.use((req, res, next) => {
+  try {
+    Object.defineProperty(req, "query", {
+      ...Object.getOwnPropertyDescriptor(req, "query"),
+      value: req.query,
+      writable: true,
+    });
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 // can be more config for security
 // app.use(helmet());
@@ -41,8 +54,6 @@ app.use(prometheusMetricsMiddleware);
 // CSRF Protection for cookies
 // app.use(csurf({ cookie: true }));
 // route
-
-
 
 app.get("/metrics", metricsEndpointJsonMiddleware);
 
@@ -54,7 +65,7 @@ app.use("/api/v1", router);
 if (fs.existsSync(buildPath + "/index.html")) {
   console.log("Found ----------------> ", buildPath);
   app.use("/", express.static(path.resolve(buildPath)));
-  app.use(function (req:Request, res:Response) {
+  app.use(function (req: Request, res: Response) {
     res.sendFile(path.resolve(buildPath, "index.html"));
   });
 } else {

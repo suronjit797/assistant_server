@@ -8,7 +8,7 @@ const transactionSchema = new Schema<TTransactions>(
     amount: { type: Number, required: true },
     isPending: { type: Boolean, default: true },
     isImportant: { type: Boolean, default: false },
-    user: { type: Schema.ObjectId, required: true },
+    user: { type: Schema.ObjectId, required: true, ref: "User" },
     type: {
       type: String,
       enums: transactionsTypes,

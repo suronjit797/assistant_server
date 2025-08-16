@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Server } from "http";
-import app from "./app";
 import config from "./config";
 
 import connectDB from "./config/db";
-import { errorLogger, successLogger } from "./shared/logger";
+import { serverLogger } from "./serverLogger";
+import { errorLogger } from "./shared/logger";
 
 let server: Server;
 
@@ -20,7 +20,12 @@ const bootFunctions = async () => {
     // connect mongodb
     await connectDB();
 
-    server = app.listen(config.PORT, () => successLogger(`App listening on port ${config.PORT}...`));
+    server = await serverLogger();
+
+    // server = app.listen(config.PORT, config.NODE_ENV === "development" ? "0.0.0.0" : "localhost", async () => {
+    //   await connection.flushall();
+    //   successLogger(`App listening on port ${config.PORT}...`);
+    // });
   } catch (error: any) {
     errorLogger(`Error during server startup: ${error?.message}`);
     process.exit(1);

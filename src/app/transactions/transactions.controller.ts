@@ -1,21 +1,14 @@
-import httpStatus from "http-status";
-import { RequestHandler } from "express";
-import globalController from "../../global/global.controller";
-import TransactionsModel from "./transactions.model";
 import dayjs from "dayjs";
-import sendResponse from "../../shared/sendResponse";
-import generateCacheKey from "../../helper/cacheKeyGenerator";
+import { RequestHandler } from "express";
+import httpStatus from "http-status";
 import redis from "../../config/redis";
-
-// variables
-const name = "Transactions";
-// global
-const globalControllers = globalController(TransactionsModel, name);
+import generateCacheKey from "../../helper/cacheKeyGenerator";
+import sendResponse from "../../shared/sendResponse";
+import TransactionsModel from "./transactions.model";
 
 const summary: RequestHandler = async (req, res, next) => {
   try {
-    const { month, year } = req.query;
-
+    const { month, year, user } = req.query;
     // cached data
     const cacheKey = generateCacheKey(req);
     const cachedData = await redis.get(cacheKey);
@@ -35,6 +28,8 @@ const summary: RequestHandler = async (req, res, next) => {
       // MongoDB Aggregation: All-time
       const allTimePipeline = [
         {
+          ...(user ? { $match: { user } } : {}),
+
           $group: {
             _id: "$type",
             totalAmount: { $sum: "$amount" },
@@ -46,6 +41,7 @@ const summary: RequestHandler = async (req, res, next) => {
       const monthlyPipeline = [
         {
           $match: {
+            ...(user ? { user } : {}),
             createdAt: {
               $gte: startOfMonth,
               $lte: endOfMonth,
@@ -91,7 +87,7 @@ const summary: RequestHandler = async (req, res, next) => {
 
     sendResponse(res, httpStatus.OK, payload);
 
-    res.json();
+    return;
   } catch (error) {
     next(error);
   }
@@ -105,4 +101,4 @@ const overall: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { ...globalControllers, summary, overall };
+export default { summary, overall };

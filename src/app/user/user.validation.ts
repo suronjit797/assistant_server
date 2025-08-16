@@ -6,13 +6,13 @@ export const userCreateZodSchema = z.object({
   body: z.object({
     name: z.string(),
     email: z.string(),
-    role: z.enum(Object.values(userRole) as [string, ...string[]]).optional(),
     password: z.string().min(6),
     phone: z.string(),
     loginId: z.string(),
-    isActive: z.boolean().optional(),
-    avatar: globalImageValidator,
     secret: z.string().min(4).max(16),
+    avatar: globalImageValidator,
+    role: z.enum(Object.values(userRole) as [string, ...string[]]).optional(),
+    isActive: z.boolean().optional(),
   }),
 });
 
