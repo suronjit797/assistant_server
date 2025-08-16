@@ -31,9 +31,8 @@ export default {
   CUSTOMER_CARE_EMAIL: process.env.CUSTOMER_CARE_EMAIL || "support@example.com",
 
   // redis
-  REDIS_PORT: Number(process.env.REDIS_PORT) || 6379,
-  REDIS_HOST: process.env.REDIS_HOST || "localhost",
   REDIS_NAME: process.env.REDIS_NAME || "app1",
+  REDIS_URL: process.env.REDIS_URL || "app1",
 
   // crypto secret:
   CRYPTO_SECRET: (process.env.CRYPTO_SECRET as string) || "",

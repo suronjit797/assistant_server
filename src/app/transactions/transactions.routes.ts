@@ -5,7 +5,7 @@ import { validatorMiddleware } from "../../middleware/zodValidator";
 import transactionsController from "./transactions.controller";
 import { generateCrudRoutes } from "express-easy-curd";
 import TransactionsModel from "./transactions.model";
-import connection from "../../config/redis";
+import redisConnection from "../../config/redis";
 
 const transactionRouter = express.Router();
 
@@ -15,7 +15,7 @@ const partialFilters = ["title", "type"];
 const globalRouter = generateCrudRoutes({
   mongooseModel: TransactionsModel,
   name: "Blog",
-  ioredis: connection,
+  ioredis: redisConnection,
   cachedTime: 600,
   middlewares: {
     getAll: [partialFilterMiddlewares(partialFilters)],

@@ -2,7 +2,7 @@ import colors from "colors/safe";
 import app from "./app";
 import config from "./config/index";
 import os from "os";
-import connection from "./config/redis";
+import redisConnection from "./config/redis";
 
 export function getNetworkIPs() {
   const interfaces = os.networkInterfaces();
@@ -34,7 +34,7 @@ export const serverLogger = async () =>
 
     console.log(colors.green(colors.bold(`\n🚀 Server ready in ${bootTime} ms\n`)));
     console.log(colors.blue(`  ➜ Local:   ${colors.underline(localURL)}`));
-    await connection.flushall();
+    await redisConnection.flushall();
 
     networkIPs.forEach((ip: string) => {
       console.log(colors.blue(`  ➜ Network: ${colors.underline(`http://${ip}:${PORT}`)}`));
