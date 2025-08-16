@@ -61,16 +61,16 @@ app.use("/api/v1", router);
 // handle not found route
 
 // frontend
-// if (fs.existsSync(buildPath + "/index.html")) {
-//   console.log("Found ----------------> ", buildPath);
-//   app.use("/", express.static(path.resolve(buildPath)));
-//   app.use(function (req: Request, res: Response) {
-//     res.sendFile(path.resolve(buildPath, "index.html"));
-//   });
-// } else {
-//   console.log("Not found ----------------> ", buildPath);
-//   app.use("/", express.static("public"));
-// }
+if (fs.existsSync(buildPath + "/index.html")) {
+  console.log("Found ----------------> ", buildPath);
+  app.use("/", express.static(path.resolve(buildPath)));
+  app.use(function (req: Request, res: Response) {
+    res.sendFile(path.resolve(buildPath, "index.html"));
+  });
+} else {
+  console.log("Not found ----------------> ", buildPath);
+  app.use("/", express.static("public"));
+}
 
 app.use((req: Request, res: Response) => {
   res.status(404).send({
