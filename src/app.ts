@@ -1,18 +1,18 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
-// import csurf from "csurf";
 import type { Application, Request, Response } from "express";
 import express from "express";
-import fs from "fs";
 import morgan from "morgan";
-import path from "path";
+// import csurf from "csurf";
+// import fs from "fs";
+// import path from "path";
+// import config from "./config";
 import router from "./app/routes";
-import config from "./config";
-import { metricsEndpointJsonMiddleware, prometheusMetricsMiddleware } from "./middleware/promMiddleware";
 import globalError from "./global/globalError";
+import { metricsEndpointJsonMiddleware, prometheusMetricsMiddleware } from "./middleware/promMiddleware";
 
 const app: Application = express();
-const buildPath = config.FRONTEND_BUILD_PATH;
+// const buildPath = config.FRONTEND_BUILD_PATH;
 
 // const allowedOrigins: any = ["http://localhost:3000", "http://199.250.210.184:5000", "http://localhost:5000"];
 // app.use(
@@ -34,12 +34,26 @@ app.use(morgan("tiny"));
 app.use(cookieParser());
 app.use(prometheusMetricsMiddleware);
 
+// app.use((req, res, next) => {
+//   try {
+//     Object.defineProperty(req, "query", {
+//       ...Object.getOwnPropertyDescriptor(req, "query"),
+//       value: req.query,
+//       writable: true,
+//     });
+//     next();
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
 app.use((req, res, next) => {
   try {
     Object.defineProperty(req, "query", {
-      ...Object.getOwnPropertyDescriptor(req, "query"),
-      value: req.query,
+      value: { ...req.query },
       writable: true,
+      configurable: true,
+      enumerable: true,
     });
     next();
   } catch (error) {
@@ -54,6 +68,10 @@ app.use((req, res, next) => {
 // app.use(csurf({ cookie: true }));
 // route
 
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello from PA server!");
+});
+
 app.get("/metrics", metricsEndpointJsonMiddleware);
 
 // main api routes
@@ -61,16 +79,16 @@ app.use("/api/v1", router);
 // handle not found route
 
 // frontend
-if (fs.existsSync(buildPath + "/index.html")) {
-  console.log("Found ----------------> ", buildPath);
-  app.use("/", express.static(path.resolve(buildPath)));
-  app.use(function (req: Request, res: Response) {
-    res.sendFile(path.resolve(buildPath, "index.html"));
-  });
-} else {
-  console.log("Not found ----------------> ", buildPath);
-  app.use("/", express.static("public"));
-}
+// if (fs.existsSync(buildPath + "/index.html")) {
+//   console.log("Found ----------------> ", buildPath);
+//   app.use("/", express.static(path.resolve(buildPath)));
+//   app.use(function (req: Request, res: Response) {
+//     res.sendFile(path.resolve(buildPath, "index.html"));
+//   });
+// } else {
+//   console.log("Not found ----------------> ", buildPath);
+//   app.use("/", express.static("public"));
+// }
 
 app.use((req: Request, res: Response) => {
   res.status(404).send({

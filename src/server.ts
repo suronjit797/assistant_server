@@ -3,8 +3,8 @@ import { Server } from "http";
 import config from "./config";
 
 import connectDB from "./config/db";
-import { serverLogger } from "./serverLogger";
 import { errorLogger } from "./shared/logger";
+import { serverLogger } from "./serverLogger";
 
 let server: Server;
 

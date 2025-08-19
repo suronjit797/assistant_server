@@ -8,10 +8,10 @@
 node_modules/
 dist/
 dump/
-**__dump
+**__dump*
 
 note*
 
 /*.zip
-* copy
+* copy*
 .vercel

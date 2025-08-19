@@ -17,7 +17,6 @@ const seedSuperAdmin = async () => {
     // Check if super admin already exists
     const existingSuperAdmin = await UserModel.findOne({
       email: superAdminEmail,
-      role: "superAdmin",
     });
 
     if (!existingSuperAdmin) {
