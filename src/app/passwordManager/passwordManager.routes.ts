@@ -1,5 +1,5 @@
 import { RequestHandler, Router } from "express";
-import { generateCrudRoutes, partialFilterMiddlewares } from "express-easy-curd";
+import { generateCrudRoutes, partialFilterMiddlewares } from "xmcrud";
 import { validatorMiddleware } from "../../middleware/zodValidator";
 import { encrypt } from "./../../helper/cryptoHelper";
 import PasswordManagerModel from "./passwordManager.model";

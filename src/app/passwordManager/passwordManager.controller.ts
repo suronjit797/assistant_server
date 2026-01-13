@@ -5,7 +5,7 @@ import { RequestHandler } from "express";
 import UserModel from "../user/user.model";
 import { ApiError } from "../../global/globalError";
 import PasswordManagerModel from "./passwordManager.model";
-import { sendResponse } from "express-easy-curd";
+import { sendResponse } from "xmcrud";
 
 const passwordDecrypt: RequestHandler = async (req, res, next) => {
   try {

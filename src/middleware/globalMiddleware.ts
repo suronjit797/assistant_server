@@ -3,6 +3,7 @@ import { RequestHandler } from "express";
 export const setUserToBody: RequestHandler = async (req, res, next) => {
   try {
     req.body.user = req.user._id;
+    console.log(req.body)
     next();
   } catch (error) {
     next(error);

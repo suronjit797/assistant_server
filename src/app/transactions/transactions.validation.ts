@@ -16,5 +16,5 @@ export const transactionUpdateValidate = z.object({
     type: z.enum(transactionsTypes as [string, ...string[]]).optional(),
     amount: z.number().optional(),
     isPending: z.boolean().optional(),
-  }),
+  }).strict(),
 });

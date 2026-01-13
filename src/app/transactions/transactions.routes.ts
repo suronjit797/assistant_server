@@ -3,7 +3,7 @@ import { transactionCreateValidate, transactionUpdateValidate } from "./transact
 import { disabledMiddleware, partialFilterMiddlewares, setUserToBody } from "../../middleware/globalMiddleware";
 import { validatorMiddleware } from "../../middleware/zodValidator";
 import transactionsController from "./transactions.controller";
-import { generateCrudRoutes } from "express-easy-curd";
+import { generateCrudRoutes } from "xmcrud";
 import TransactionsModel from "./transactions.model";
 import redisConnection from "../../config/redis";
 
@@ -14,7 +14,7 @@ transactionRouter.get("/summary", transactionsController.summary);
 const partialFilters = ["title", "type"];
 const globalRouter = generateCrudRoutes({
   mongooseModel: TransactionsModel,
-  name: "Blog",
+  name: "transactions",
   ioredis: redisConnection,
   cachedTime: 600,
   middlewares: {
