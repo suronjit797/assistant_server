@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const dailyTaskSchema = z.object({
+export const dailyTaskSchema = z.object({
   name: z.string(),
   description: z.string(),
   order: z.number(),

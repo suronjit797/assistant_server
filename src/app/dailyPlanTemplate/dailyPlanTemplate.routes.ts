@@ -10,14 +10,14 @@ const dailyPlanTemplateRouter = Router();
 
 const curdRouter = generateCrudRoutes({
   mongooseModel: DailyPlanTemplateModel,
-  name: "dailyPlanTemplate", //! name same as route name
+  name: "daily-plan-template", //! name same as route name
   // ioredis: redis,  // optional if has redis in app
   middlewares: {
     getAll: [partialFilterMiddlewares(partialFilterItems)],
-    create: [validatorMiddleware(dailyPlanTemplateCreateZodSchema)], // middlewares are optional
-    update: [validatorMiddleware(dailyPlanTemplateUpdateZodSchema)], // middlewares are optional
-    // getSingle: [],  // middlewares are optional
-    // remove: [],  // middlewares are optional
+    create: [validatorMiddleware(dailyPlanTemplateCreateZodSchema)],
+    update: [validatorMiddleware(dailyPlanTemplateUpdateZodSchema)],
+    // getSingle: [],
+    // remove: [],
     updateMany: [notFoundMiddleware],
     removeMany: [notFoundMiddleware],
   },
